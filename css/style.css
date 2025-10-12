@@ -1,0 +1,22 @@
+#grid {
+  display: grid;
+  grid-template-columns: repeat(20, 1fr);
+  grid-template-rows: repeat(20, 1fr);
+  justify-content: center;
+  grid-column: 1 / 10;
+  grid-row: 1 / 10;
+  height: 650px;
+  width: 650px;
+  justify-content: center;
+  place-self: center;
+}
+
+.cell {
+  display: flex;
+  aspect-ratio: 1/1;
+  border:  solid black;
+}
+
+#wall {
+    background-color: blue;
+}
