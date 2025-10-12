@@ -15,11 +15,11 @@
   border: solid black;
 }
 
-#wall {
+.wall {
     background-color: blue;
 }
 
-#path {
+.path {
     background-color: black;
 }
 
@@ -28,4 +28,53 @@
     background-size: cover;
     height: 25px;
     width: 25px;
+    background-color: black;
+}
+
+.specialPellet {
+    background-image: url(./special-pellet.png);
+    background-size: cover;
+    height: 25px;
+    width: 25px;
+    background-color: black;
+}
+
+.pellet {
+    background-image: url(./pellets.png);
+    background-size: cover;
+    height: 25px;
+    width: 25px;
+    place-self: center;
+}
+
+.ghostOne {
+    background-image: url(./Blinky.png);
+    background-size: cover;
+    height: 25px;
+    width: 25px;
+    place-self: center;
+}
+
+.ghostTwo {
+    background-image: url(./Inky.png);
+    background-size: cover;
+    height: 25px;
+    width: 25px;
+    place-self: center;
+}
+
+.ghostThree {
+    background-image: url(./Pink.png);
+    background-size: cover;
+    height: 25px;
+    width: 25px;
+    place-self: center;
+}
+
+.ghostFour {
+    background-image: url(./clyde\ 11.png);
+    background-size: cover;
+    height: 25px;
+    width: 25px;
+    place-self: center;
 }
