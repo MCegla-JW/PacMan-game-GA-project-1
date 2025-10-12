@@ -56,9 +56,8 @@ console.log('am i selected', startGameButton);
 const resetGameButton = document.querySelector('.reset-button'); // Reset Game button 
 console.log('am i selected', resetGameButton);
 
-const scoreBoard = document.querySelector('.score-board');
+const scoreBoard = document.querySelector('.score-board'); // Score Board 
 console.log('am i selected', scoreBoard);
-
 
 /*------------------------ Functions ------------------------*/
 
@@ -102,12 +101,48 @@ const init = () => {
 };
 init();
 
+// Function to clear pellet cell and leave empty 
 
+// const clearCell = () => {
+//     gameBoard.forEach((boardCell) => {
+//         boardCell[i].classList.remove('pellet'); // removing pellet image
+//         boardCell[i].classList.add('pacman'); // adding pacman image 
+//         currentPoints = currentPoints + 10; // adding 10 points to current points
+//         scoreBoard.textContent = currentPoints; // displaying current points 
+//     })
+// }
+
+// Getting pacman' current index on board as well as the next index to his left, right, up and down 
+let currentPacIdx = gameBoard.indexOf(3); // this is pacmans current index 
+console.log('pacman current index is', currentPacIdx);
+let leftPacIdx = currentPacIdx - 1;
+console.log('current index to pac left', leftPacIdx);
+let rightPacIdx = currentPacIdx + 1;
+console.log('current index to pac right', rightPacIdx)
+let upPacIdx = currentPacIdx - 20;
+console.log('current index to pac up', upPacIdx)
+let downPacIdx = currentPacIdx + 20;
+console.log('current index to pac down', downPacIdx);
+
+
+const movePacman = (evt) => {
+    const pacMan = document.querySelector('.pacman'); // Pacman will be fetched anew everytime this function runs 
+    document.addEventListener('keydown', (evt) => {
+        console.log('key pressed', event.key); // shows which key was pressed
+        gameBoard.splice(currentPacIdx, 1)[0]; // go to currentPacIdx and remove 1 element, i gets 3 out of the array 
+        gameBoard.splice(leftPacIdx, 1, currentPacIdx); // at leftPacIdx, remove 1 element (current index here) and insert currentPacIdx
+        //clearCell();
+    })
+};
+
+movePacman();
+
+console.log('pac current index', currentPacIdx);
 
 /*------------------------ Add Event Listeners ------------------------*/
 
 //start game by clicking button 
-startGameButton.addEventListener('click', ()=> {
+startGameButton.addEventListener('click', () => {
     init();
 });
 
