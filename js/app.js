@@ -113,26 +113,37 @@ init();
 // }
 
 // Getting pacman' current index on board as well as the next index to his left, right, up and down 
-let currentPacIdx = gameBoard.indexOf(3); // this is pacmans current index 
-console.log('pacman current index is', currentPacIdx);
-let leftPacIdx = currentPacIdx - 1;
-console.log('current index to pac left', leftPacIdx);
-let rightPacIdx = currentPacIdx + 1;
-console.log('current index to pac right', rightPacIdx)
-let upPacIdx = currentPacIdx - 20;
-console.log('current index to pac up', upPacIdx)
-let downPacIdx = currentPacIdx + 20;
-console.log('current index to pac down', downPacIdx);
 
+        let currentPacIdx = gameBoard.indexOf(3); // this is pacmans current index 
 
-const movePacman = (evt) => {
+const movePacman = () => {
     const pacMan = document.querySelector('.pacman'); // Pacman will be fetched anew everytime this function runs 
     document.addEventListener('keydown', (evt) => {
-        console.log('key pressed', event.key); // shows which key was pressed
-        gameBoard.splice(currentPacIdx, 1)[0]; // go to currentPacIdx and remove 1 element, i gets 3 out of the array 
-        gameBoard.splice(leftPacIdx, 1, currentPacIdx); // at leftPacIdx, remove 1 element (current index here) and insert currentPacIdx
+        console.log('key pressed', evt.key); // shows which key was pressed
+        gameBoard[currentPacIdx] = 2; // remove pacman from current cell and replace with 2 - path cell
+        console.log('pacman current index is', currentPacIdx);
+        let leftPacIdx = currentPacIdx - 1; // possible pacman index when moving left 
+        console.log('current index to pac left', leftPacIdx);
+        let rightPacIdx = currentPacIdx + 1; // possible pacman index when moving right 
+        console.log('current index to pac right', rightPacIdx)
+        let upPacIdx = currentPacIdx - 20; // possible pacman index when moving up 
+        console.log('current index to pac up', upPacIdx)
+        let downPacIdx = currentPacIdx + 20; // possible pacman index when moving down 
+        console.log('current index to pac down', downPacIdx);
+        if (evt.key === 'ArrowLeft') {
+            currentPacIdx = leftPacIdx
+        } else if (evt.key === 'ArrowRight') {
+            currentPacIdx = rightPacIdx;
+        } else if (evt.key === 'ArrowUp') {
+            currentPacIdx = upPacIdx;
+        } else if (evt.key === 'ArrowDown') {
+            currentPacIdx = downPacIdx;
+        };
+        gameBoard[currentPacIdx] = 3; // place pacman in new cell
+        console.log('pacman has moved', currentPacIdx);
         //clearCell();
     })
+
 };
 
 movePacman();
