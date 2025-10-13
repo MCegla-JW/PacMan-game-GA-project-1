@@ -37,6 +37,7 @@ const gameBoard = [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
 /*---------------------------- Variables (state) ----------------------------*/
 //let pacman = { name: "Pacman" };
 let currentPoints = 0;
+let totalScore = 2590;
 let scaredGhost = false;
 let strongPacman = false; // may not need it as scaredGhost will indicate Pacman ate the strong pellet 
 let gameOver = false;
@@ -136,8 +137,8 @@ const movePacman = () => {
             console.log('i have moved down', gameBoard[downPacIdx])
         };
         gameBoard[currentPacIdx] = 3; // place pacman in new cell - this is the line that makes the path remember that pacman has been there and it changes 2 to 3 on console 
-        console.log('pacman has moved', currentPacIdx); 
-        clearCell();
+        console.log('pacman has moved', currentPacIdx);
+        pelletCollision();
     });
 
 };
@@ -152,13 +153,35 @@ movePacman();
 // };
 
 
-const clearCell = () => {
-        boardCell[currentPacIdx].classList.remove('pellet', 'specialPellet'); // removing pellet image
-        boardCell[previousPacIdx].classList.remove('pacman') // remove Pacman image from previous index which is the saved value in here - previousPacIdx = currentPacIdx; 
+const checkWin = () => { // this will be called inside the collison pellet function which in turn will be called in movePacman 
+    if (currentPoints === totalScore) {
+        scoreBoard.textContent = `You win! Your score is ${totalScore}`
+    }
+};
+
+
+const pelletCollision = () => {
+    if (boardCell[currentPacIdx].classList.contains('pellet')) { // first checking if it contains the pellet 
+        boardCell[currentPacIdx].classList.remove('pellet'); // removing pellet image
+        boardCell[previousPacIdx].classList.remove('pacman'); // remove Pacman image from previous index which is the saved value in here - previousPacIdx = currentPacIdx;          
+        boardCell[currentPacIdx].classList.add('pacman'); // adding pacman image ;
+        scaredGhost = false;
+        currentPoints = currentPoints + 10; // adding 10 points to current points
+        scoreBoard.textContent = currentPoints; // displaying current points  
+    } else if (boardCell[currentPacIdx].classList.contains('specialPellet')) { // first checking if it contains the special pellet 
+        boardCell[currentPacIdx].classList.remove('specialPellet') // removing pellet image
+        boardCell[previousPacIdx].classList.remove('pacman'); // remove Pacman image from previous index which is the saved value in here - previousPacIdx = currentPacIdx;          
+        boardCell[currentPacIdx].classList.add('pacman'); // adding pacman image ;
+        scaredGhost = true; // will have to figure out how to set him to scared for a short amount of time        
+        currentPoints = currentPoints + 200; // adding 200 points to current points
+        scoreBoard.textContent = currentPoints;  // displaying current points 
+    } else {
+        boardCell[previousPacIdx].classList.remove('pacman'); // remove Pacman image from previous index which is the saved value in here - previousPacIdx = currentPacIdx; 
         boardCell[currentPacIdx].classList.add('pacman'); // adding pacman image ; 
-        //currentPoints = currentPoints + 10; // adding 10 points to current points
-        //scoreBoard.textContent = currentPoints; // displaying current points 
-    };
+    }
+    checkWin();
+};
+
 
 
 console.log('pac current index', currentPacIdx);
