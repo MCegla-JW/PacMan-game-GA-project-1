@@ -64,7 +64,7 @@ console.log('am i selected', scoreBoard);
 // place elements on gameBoard - check index and add classlist - if 
 
 const placeGameElements = () => {
-    if (gameOver) return;
+    // if (gameOver) return;
     for (let i = 0; i < gameBoard.length; i++) {
         if (gameBoard[i] === 1) {
             boardCell[i].classList.add('wall');
@@ -114,14 +114,13 @@ init();
 
 // Getting pacman' current index on board as well as the next index to his left, right, up and down 
 
-        let currentPacIdx = gameBoard.indexOf(3); // this is pacmans current index 
+let currentPacIdx = gameBoard.indexOf(3); // this is pacmans current index 
+console.log('pacman current index is', currentPacIdx);
 
 const movePacman = () => {
-    const pacMan = document.querySelector('.pacman'); // Pacman will be fetched anew everytime this function runs 
     document.addEventListener('keydown', (evt) => {
-        console.log('key pressed', evt.key); // shows which key was pressed
-        gameBoard[currentPacIdx] = 2; // remove pacman from current cell and replace with 2 - path cell
-        console.log('pacman current index is', currentPacIdx);
+        // const pacMan = document.querySelector('.pacman'); // Pacman will be fetched anew everytime this function runs not sure this is working 
+        // console.log('am i showing', pacMan);
         let leftPacIdx = currentPacIdx - 1; // possible pacman index when moving left 
         console.log('current index to pac left', leftPacIdx);
         let rightPacIdx = currentPacIdx + 1; // possible pacman index when moving right 
@@ -130,19 +129,23 @@ const movePacman = () => {
         console.log('current index to pac up', upPacIdx)
         let downPacIdx = currentPacIdx + 20; // possible pacman index when moving down 
         console.log('current index to pac down', downPacIdx);
-        if (evt.key === 'ArrowLeft') {
-            currentPacIdx = leftPacIdx
-        } else if (evt.key === 'ArrowRight') {
+        if (evt.key === 'ArrowLeft' && gameBoard[leftPacIdx] != 1) {
+            currentPacIdx = leftPacIdx;
+            console.log('i have moved left', gameBoard[leftPacIdx])
+        } else if (evt.key === 'ArrowRight' && gameBoard[rightPacIdx] != 1) {
             currentPacIdx = rightPacIdx;
-        } else if (evt.key === 'ArrowUp') {
+            console.log('i have moved right', gameBoard[rightPacIdx])
+        } else if (evt.key === 'ArrowUp' && gameBoard[upPacIdx] != 1) {
+            console.log('i have moved up', gameBoard[upPacIdx])
             currentPacIdx = upPacIdx;
-        } else if (evt.key === 'ArrowDown') {
+        } else if (evt.key === 'ArrowDown' && gameBoard[downPacIdx] != 1) {
             currentPacIdx = downPacIdx;
+            console.log('i have moved down', gameBoard[downPacIdx])
         };
-        gameBoard[currentPacIdx] = 3; // place pacman in new cell
+        gameBoard[currentPacIdx] = 3; // place pacman in new cell - this is the line that makes the path remember that pacman has been there and it changes 2 to 3 on console 
         console.log('pacman has moved', currentPacIdx);
         //clearCell();
-    })
+    });
 
 };
 
@@ -163,4 +166,5 @@ startGameButton.addEventListener('click', () => {
 // Special pellet is placed at i = 41, 58, 221, 238 
 
 
-
+/*
+Visual re-rendering → update the DOM (boardCell) so Pac-Man actually appears in his new spot. */
