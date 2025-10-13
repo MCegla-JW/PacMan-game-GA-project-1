@@ -10,6 +10,45 @@
   background-color: black;
 }
 
+body {
+    font-family: 'Pixelify Sans', sans-serif;
+    color: whitesmoke;
+    background-color: black;
+    display: flex;
+    justify-content: center; 
+    flex-direction: column;
+    align-items: center;;
+}
+
+header {
+    font-size: 50px;
+}
+
+.score-board {
+    font-size: 30px;
+    margin-bottom: 10px;
+}
+
+.button-container {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+}
+
+.start-button {
+    font-family: 'Pixelify Sans', sans-serif;
+    margin-bottom: 10px;
+    height: 40px;
+    width: auto;
+}
+
+.reset-button {
+    font-family: 'Pixelify Sans', sans-serif;
+    margin-bottom: 10px;
+    height: 40px;
+    width: auto;
+}
+
 .cell {
   display: flex;
   aspect-ratio: 1/1;
@@ -30,7 +69,7 @@
     height: 25px;
     width: 25px;
     background-color: transparent;
-    place-self: center;;
+    place-self: center;
 }
 
 .specialPellet {

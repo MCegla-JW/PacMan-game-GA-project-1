@@ -165,14 +165,16 @@ const pelletCollision = () => {
         boardCell[currentPacIdx].classList.remove('pellet'); // removing pellet image
         boardCell[previousPacIdx].classList.remove('pacman'); // remove Pacman image from previous index which is the saved value in here - previousPacIdx = currentPacIdx;          
         boardCell[currentPacIdx].classList.add('pacman'); // adding pacman image ;
-        scaredGhost = false;
+        scaredGhost = false; 
+        strongPacman = false; // might be redundant
         currentPoints = currentPoints + 10; // adding 10 points to current points
         scoreBoard.textContent = currentPoints; // displaying current points  
     } else if (boardCell[currentPacIdx].classList.contains('specialPellet')) { // first checking if it contains the special pellet 
         boardCell[currentPacIdx].classList.remove('specialPellet') // removing pellet image
         boardCell[previousPacIdx].classList.remove('pacman'); // remove Pacman image from previous index which is the saved value in here - previousPacIdx = currentPacIdx;          
         boardCell[currentPacIdx].classList.add('pacman'); // adding pacman image ;
-        scaredGhost = true; // will have to figure out how to set him to scared for a short amount of time        
+        scaredGhost = true; // will have to figure out how to set him to scared for a short amount of time    
+        strongPacman = true; // might be redundant 
         currentPoints = currentPoints + 200; // adding 200 points to current points
         scoreBoard.textContent = currentPoints;  // displaying current points 
     } else {
