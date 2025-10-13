@@ -103,15 +103,6 @@ init();
 
 // Function to clear pellet cell and leave empty 
 
-// const clearCell = () => {
-//     gameBoard.forEach((boardCell) => {
-//         boardCell[i].classList.remove('pellet'); // removing pellet image
-//         boardCell[i].classList.add('pacman'); // adding pacman image 
-//         currentPoints = currentPoints + 10; // adding 10 points to current points
-//         scoreBoard.textContent = currentPoints; // displaying current points 
-//     })
-// }
-
 // Getting pacman' current index on board as well as the next index to his left, right, up and down 
 
 let currentPacIdx = gameBoard.indexOf(3); // this is pacmans current index 
@@ -143,13 +134,29 @@ const movePacman = () => {
             console.log('i have moved down', gameBoard[downPacIdx])
         };
         gameBoard[currentPacIdx] = 3; // place pacman in new cell - this is the line that makes the path remember that pacman has been there and it changes 2 to 3 on console 
-        console.log('pacman has moved', currentPacIdx);
-        //clearCell();
+        console.log('pacman has moved', currentPacIdx); 
+        clearCell();
     });
 
 };
 
 movePacman();
+
+// const updateScore = () => { // kind of works, adds points but everytime he moves, i want thim to just add points on collision with pellet, so revist this when working on pellet collision funciton 
+//         if (gameBoard[currentPacIdx] === 3) {
+//         currentPoints = currentPoints + 10; // adding 10 points to current points
+//         scoreBoard.textContent = currentPoints; // displaying current points
+// }
+// };
+
+
+const clearCell = () => {
+        boardCell[currentPacIdx].classList.remove('pellet', 'specialPellet'); // removing pellet image
+        boardCell[currentPacIdx].classList.add('pacman'); // adding pacman image 
+        //currentPoints = currentPoints + 10; // adding 10 points to current points
+        //scoreBoard.textContent = currentPoints; // displaying current points 
+    };
+
 
 console.log('pac current index', currentPacIdx);
 
