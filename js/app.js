@@ -41,6 +41,9 @@ let scaredGhost = false;
 let strongPacman = false; // may not need it as scaredGhost will indicate Pacman ate the strong pellet 
 let gameOver = false;
 let specialPellet = 4;
+let previousPacIdx;
+let currentPacIdx = gameBoard.indexOf(3); // this is pacmans current index 
+console.log('pacman current index is', currentPacIdx);
 
 //let ghost = 
 //let pellet = 
@@ -105,13 +108,12 @@ init();
 
 // Getting pacman' current index on board as well as the next index to his left, right, up and down 
 
-let currentPacIdx = gameBoard.indexOf(3); // this is pacmans current index 
-console.log('pacman current index is', currentPacIdx);
 
 const movePacman = () => {
     document.addEventListener('keydown', (evt) => {
         // const pacMan = document.querySelector('.pacman'); // Pacman will be fetched anew everytime this function runs not sure this is working 
         // console.log('am i showing', pacMan);
+        previousPacIdx = currentPacIdx; // storing the value of currentPacIndex before any changes are made to it 
         let leftPacIdx = currentPacIdx - 1; // possible pacman index when moving left 
         console.log('current index to pac left', leftPacIdx);
         let rightPacIdx = currentPacIdx + 1; // possible pacman index when moving right 
@@ -152,7 +154,8 @@ movePacman();
 
 const clearCell = () => {
         boardCell[currentPacIdx].classList.remove('pellet', 'specialPellet'); // removing pellet image
-        boardCell[currentPacIdx].classList.add('pacman'); // adding pacman image 
+        boardCell[previousPacIdx].classList.remove('pacman') // remove Pacman image from previous index which is the saved value in here - previousPacIdx = currentPacIdx; 
+        boardCell[currentPacIdx].classList.add('pacman'); // adding pacman image ; 
         //currentPoints = currentPoints + 10; // adding 10 points to current points
         //scoreBoard.textContent = currentPoints; // displaying current points 
     };
