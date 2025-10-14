@@ -63,6 +63,8 @@ console.log('am i selected', resetGameButton);
 const scoreBoard = document.querySelector('.score-board'); // Score Board 
 console.log('am i selected', scoreBoard);
 
+const holdingImage = document.querySelector('#opening-image'); // Image that will appear before button is clicked 
+
 /*------------------------ Functions ------------------------*/
 
 // place elements on gameBoard - check index and add classlist - if 
@@ -144,13 +146,6 @@ const movePacman = () => {
 
 movePacman();
 
-// const updateScore = () => { // kind of works, adds points but everytime he moves, i want thim to just add points on collision with pellet, so revist this when working on pellet collision funciton 
-//         if (gameBoard[currentPacIdx] === 3) {
-//         currentPoints = currentPoints + 10; // adding 10 points to current points
-//         scoreBoard.textContent = currentPoints; // displaying current points
-// }
-// };
-
 
 const checkWin = () => { // this will be called inside the collison pellet function which in turn will be called in movePacman 
     if (currentPoints === totalScore) {
@@ -158,9 +153,7 @@ const checkWin = () => { // this will be called inside the collison pellet funct
     }
 };
 
-// const checkLoss = () => {
-//     if 
-// }
+
 
 // see if i can include ghost collision in this function and rename it
 
@@ -199,7 +192,50 @@ const ghostIsScared = () => { // will have to set ghost change color to white fo
     }, 7000);
 }
 
-// ghost collision 
+// ghost move timer for automatic ghost movement 
+
+const ghostMoveTimer = () => {
+    intervalGhost = setTimeout(() => {
+        console.log('ghost is moving');
+        ghostMoveTimer();
+    }, 1000);
+}
+
+ghostMoveTimer();
+
+// ghost move function 
+
+const ghostMove = () => {
+    previous
+
+}
+
+previousPacIdx = currentPacIdx; // storing the value of currentPacIndex before any changes are made to it 
+        let leftPacIdx = currentPacIdx - 1; // possible pacman index when moving left 
+        console.log('current index to pac left', leftPacIdx);
+        let rightPacIdx = currentPacIdx + 1; // possible pacman index when moving right 
+        console.log('current index to pac right', rightPacIdx)
+        let upPacIdx = currentPacIdx - 20; // possible pacman index when moving up 
+        console.log('current index to pac up', upPacIdx)
+        let downPacIdx = currentPacIdx + 20; // possible pacman index when moving down 
+        console.log('current index to pac down', downPacIdx);
+        if (evt.key === 'ArrowLeft' && gameBoard[leftPacIdx] != 1) {
+            currentPacIdx = leftPacIdx;
+            console.log('i have moved left', gameBoard[leftPacIdx])
+        } else if (evt.key === 'ArrowRight' && gameBoard[rightPacIdx] != 1) {
+            currentPacIdx = rightPacIdx;
+            console.log('i have moved right', gameBoard[rightPacIdx])
+        } else if (evt.key === 'ArrowUp' && gameBoard[upPacIdx] != 1) {
+            console.log('i have moved up', gameBoard[upPacIdx])
+            currentPacIdx = upPacIdx;
+        } else if (evt.key === 'ArrowDown' && gameBoard[downPacIdx] != 1) {
+            currentPacIdx = downPacIdx;
+            console.log('i have moved down', gameBoard[downPacIdx])
+        };
+        gameBoard[currentPacIdx] = 3; // place pacman in new cell - this is the line that makes the path remember that pacman has been there and it changes 2 to 3 on console 
+        console.log('pacman has moved', currentPacIdx);
+
+// ghost collision function with Pacman 
 
 const ghostCollision = () => {
     if (boardCell[currentPacIdx].classList.contains('ghostOne') || 
@@ -209,7 +245,7 @@ const ghostCollision = () => {
             boardCell[previousPacIdx].classList.remove('pacman') 
         if (scaredGhost === false) {
             gameOver = true;
-            scoreBoard.textContent = `Game Over! Your Score: ${currentPoints}`;
+            scoreBoard.textContent = `Game Over! Your Score: ${currentPoints}. Click Reset Game to play again!`;
             console.log('touched ghost');
         } else {
             console.log('ghost will be sent to pen for a bit')
@@ -218,6 +254,36 @@ const ghostCollision = () => {
 };
 
 console.log('pac current index', currentPacIdx);
+
+// Dijkstra algorithm attemp for pathfinding 
+
+// const ghostGetClosestPath = (gameBoard, start) => {
+//     let distances = {}; // store shortest distance from ghost starting node to Pacman 
+//     let visited = new Set(); // keep track of nodes already processed 
+//     const nodes = Object.keys(gameBoard); // get all the nodes of the graph 
+
+//     for (let node of nodes) {
+//         distances[node] = Infinity;
+//     }
+//     distances[start] = 0; // the distance from the start node to itself is 0 
+//     while (nodes.length) { // loop until all nodes are visited 
+//         nodes.sort((a, b) => distances[a] - distances[b]); // sort nodes by distance and pick the closest univisite node (how do i make sure the wall isnt included)
+//         let closestNode = nodes.shift();
+//         if (distances[closestNode] === Infinity) break; // if the shortest distance to the closest node is still Infinity, then remain
+//         visited.add(closestNode); // mark the chosen node as visited 
+//         for (let neighbor in gameBoard[closestNode]) { // for each neighbouring node of the current node 
+//             if (!visited.has(neighbor)) { //if the neighbour hasnt been visited yet
+//                 let newDistance = distances[closestNode] + gameBoard[closestNode] [neighbor]; // calclulate tentative distance to the neighbour node 
+//                 if (newDistance < distances[neighbor]) { // if the newly calcualted distance is shorter that the previously known 
+//                     distances[neighbor] = newDistance; // update the shortest distance to this neighbour 
+//                 }
+//             }
+//         }
+//     }
+//     return distances; // return the shortest distance from the start node to all nodes 
+// };
+
+
 
 /*------------------------ Add Event Listeners ------------------------*/
 
