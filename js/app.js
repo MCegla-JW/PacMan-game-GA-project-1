@@ -202,15 +202,20 @@ const ghostIsScared = () => { // will have to set ghost change color to white fo
 // ghost collision 
 
 const ghostCollision = () => {
-    if (boardCell[currentPacIdx].classList.contains('ghostOne')) {
-        boardCell[previousPacIdx].classList.remove('pacman');
-        // if (scaredGhost = false) {
-        //     gameOver = true; 
-        scoreBoard.textContent = `Game Over! Your Score: ${currentPoints}`; 
-        console.log('touched ghost'); 
-        } 
-    };  
-
+    if (boardCell[currentPacIdx].classList.contains('ghostOne') || 
+        boardCell[currentPacIdx].classList.contains('ghostTwo') || 
+        boardCell[currentPacIdx].classList.contains('ghostThree') || 
+        boardCell[currentPacIdx].classList.contains('ghostFour')) {
+            boardCell[previousPacIdx].classList.remove('pacman') 
+        if (scaredGhost === false) {
+            gameOver = true;
+            scoreBoard.textContent = `Game Over! Your Score: ${currentPoints}`;
+            console.log('touched ghost');
+        } else {
+            console.log('ghost will be sent to pen for a bit')
+        }
+};
+};
 
 console.log('pac current index', currentPacIdx);
 
