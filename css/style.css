@@ -119,3 +119,11 @@ header {
     width: 25px;
     place-self: center;
 }
+
+.scaredGhost {
+    background-image: url(./Scared-Ghost.png);
+    background-size: cover;
+    height: 25px;
+    width: 25px;
+    place-self: center;
+}

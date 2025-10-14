@@ -43,6 +43,15 @@ let strongPacman = false; // may not need it as scaredGhost will indicate Pacman
 let gameOver = false;
 let specialPellet = 4; // not sure if needed 
 let previousPacIdx;
+let previousGhostIdx;
+let currentGhostOneIdx = gameBoard.indexOf(5);
+console.log('ghost One current index is', currentGhostOneIdx);
+let currentGhostTwoIdx = gameBoard.indexOf(6); 
+console.log('ghost Two current incex is', currentGhostTwoIdx);
+let currentGhostThreeIdx = gameBoard.indexOf(7);
+console.log('ghost Three current index is', currentGhostThreeIdx);
+let currentGhostFourIdx = gameBoard.indexOf(8); 
+console.log('ghost Four current index is', currentGhostFourIdx);
 let currentPacIdx = gameBoard.indexOf(3); // this is pacmans current index 
 console.log('pacman current index is', currentPacIdx);
 
@@ -185,10 +194,14 @@ const pelletCollision = () => {
 const ghostIsScared = () => { // will have to set ghost change color to white for all 
     //if (gameOver) return; 
     scaredGhost = true;
+    boardCell[currentGhostOneIdx].classList.remove('ghostOne');
+    boardCell[currentGhostOneIdx].classList.add('scaredGhost');
     console.log('ghost is now scared for 7 seconds');
     interval = setTimeout(() => { // schedule scared ghost to last 7 seconds 
         scaredGhost = false;
         console.log('timer has ran out, ghost no longer scared');
+        boardCell[currentGhostOneIdx].classList.remove('scaredGhost');
+        boardCell[currentGhostOneIdx].classList.add('ghostOne');
     }, 7000);
 }
 
@@ -197,43 +210,46 @@ const ghostIsScared = () => { // will have to set ghost change color to white fo
 const ghostMoveTimer = () => {
     intervalGhost = setTimeout(() => {
         console.log('ghost is moving');
+        //console.log('next step for ghost', findGhostNextStep());
+        ghostOneMove();
         ghostMoveTimer();
     }, 1000);
 }
 
 ghostMoveTimer();
 
-// ghost move function 
+// ghost move function test
 
-const ghostMove = () => {
-    previous
+// const findGhostNextStep = (currentGhostIdx) => { // very basic level of ghost finding his next step 
+//     let ghostNextStep = currentGhostIdx + 1;
+//     return ghostNextStep; // this is current ghost index + 1 
+// }
 
-}
+const ghostOneMove = () => {
+    previousGhostOneIdx = currentGhostOneIdx; 
+    let leftGhostOneIdx = currentGhostOneIdx - 1;
+    console.log('next index to ghost one to the left is', leftGhostOneIdx);
+    let rightGhostOneIdx = currentGhostOneIdx + 1;
+    console.log('next index to ghost one to the right is', rightGhostOneIdx);
+    let upGhostOneIdx = currentGhostOneIdx - 20;
+    console.log('next index to ghost one up is', upGhostOneIdx);
+    let downGhostOneIdx = currentGhostOneIdx + 20;
+    console.log('next index to ghost one down is', downGhostOneIdx);
+    if (gameBoard[leftGhostOneIdx] != 1) {
+        currentGhostOneIdx = leftGhostOneIdx;
+    } if (gameBoard[rightGhostOneIdx != 1]) {
+        currentGhostOneIdx = rightGhostOneIdx 
+    } if (gameBoard[upGhostOneIdx != 1]) {
+        currentGhostOneIdx = upGhostOneIdx;
+    } if (gameBoard[downGhostOneIdx != 1]) {
+        currentGhostOneIdx = downGhostOneIdx;
+    }
+    boardCell[previousGhostOneIdx].classList.remove('ghostOne'); // this wil be removed, just used now to see him visibly move
+    boardCell[currentGhostOneIdx].classList.add('ghostOne'); // this will be removed, just used here now to see him visibly move
+    //currentGhostOneIdx = findGhostNextStep(currentGhostOneIdx); // currentGhostOneIdx = 150 = 150 + 1
+    console.log('Ghost One is here', currentGhostOneIdx);
+};
 
-previousPacIdx = currentPacIdx; // storing the value of currentPacIndex before any changes are made to it 
-        let leftPacIdx = currentPacIdx - 1; // possible pacman index when moving left 
-        console.log('current index to pac left', leftPacIdx);
-        let rightPacIdx = currentPacIdx + 1; // possible pacman index when moving right 
-        console.log('current index to pac right', rightPacIdx)
-        let upPacIdx = currentPacIdx - 20; // possible pacman index when moving up 
-        console.log('current index to pac up', upPacIdx)
-        let downPacIdx = currentPacIdx + 20; // possible pacman index when moving down 
-        console.log('current index to pac down', downPacIdx);
-        if (evt.key === 'ArrowLeft' && gameBoard[leftPacIdx] != 1) {
-            currentPacIdx = leftPacIdx;
-            console.log('i have moved left', gameBoard[leftPacIdx])
-        } else if (evt.key === 'ArrowRight' && gameBoard[rightPacIdx] != 1) {
-            currentPacIdx = rightPacIdx;
-            console.log('i have moved right', gameBoard[rightPacIdx])
-        } else if (evt.key === 'ArrowUp' && gameBoard[upPacIdx] != 1) {
-            console.log('i have moved up', gameBoard[upPacIdx])
-            currentPacIdx = upPacIdx;
-        } else if (evt.key === 'ArrowDown' && gameBoard[downPacIdx] != 1) {
-            currentPacIdx = downPacIdx;
-            console.log('i have moved down', gameBoard[downPacIdx])
-        };
-        gameBoard[currentPacIdx] = 3; // place pacman in new cell - this is the line that makes the path remember that pacman has been there and it changes 2 to 3 on console 
-        console.log('pacman has moved', currentPacIdx);
 
 // ghost collision function with Pacman 
 
