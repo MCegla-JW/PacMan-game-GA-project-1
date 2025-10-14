@@ -12,7 +12,7 @@ Game Board elements:
 8 - ghostFour - orange
  */
 
-const gameBoard = [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
+let gameBoard = [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
     1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 1, 2, 2, 2, 2, 2, 2, 2, 2, 1,
     1, 4, 1, 1, 1, 2, 1, 1, 1, 2, 1, 2, 1, 1, 1, 2, 1, 1, 4, 1,
     1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 1,
@@ -41,7 +41,7 @@ let totalScore = 2590;
 let scaredGhost = false;
 let strongPacman = false; // may not need it as scaredGhost will indicate Pacman ate the strong pellet 
 let gameOver = false;
-let specialPellet = 4;
+let specialPellet = 4; // not sure if needed 
 let previousPacIdx;
 let currentPacIdx = gameBoard.indexOf(3); // this is pacmans current index 
 console.log('pacman current index is', currentPacIdx);
@@ -101,9 +101,7 @@ const placeGameElements = () => {
 // Initialize game on load of page 
 const init = () => {
     placeGameElements();
-    currentPoints = 0; // not sure if needed
 };
-init();
 
 // Function to clear pellet cell and leave empty 
 
@@ -139,6 +137,7 @@ const movePacman = () => {
         gameBoard[currentPacIdx] = 3; // place pacman in new cell - this is the line that makes the path remember that pacman has been there and it changes 2 to 3 on console 
         console.log('pacman has moved', currentPacIdx);
         pelletCollision();
+        ghostCollision();
     });
 
 };
@@ -155,28 +154,32 @@ movePacman();
 
 const checkWin = () => { // this will be called inside the collison pellet function which in turn will be called in movePacman 
     if (currentPoints === totalScore) {
-        scoreBoard.textContent = `You win! Your score is ${totalScore}`
+        scoreBoard.textContent = `You win! Your Score is ${totalScore}`
     }
 };
 
+// const checkLoss = () => {
+//     if 
+// }
+
+// see if i can include ghost collision in this function and rename it
 
 const pelletCollision = () => {
     if (boardCell[currentPacIdx].classList.contains('pellet')) { // first checking if it contains the pellet 
         boardCell[currentPacIdx].classList.remove('pellet'); // removing pellet image
         boardCell[previousPacIdx].classList.remove('pacman'); // remove Pacman image from previous index which is the saved value in here - previousPacIdx = currentPacIdx;          
         boardCell[currentPacIdx].classList.add('pacman'); // adding pacman image ;
-        scaredGhost = false; 
-        strongPacman = false; // might be redundant
         currentPoints = currentPoints + 10; // adding 10 points to current points
-        scoreBoard.textContent = currentPoints; // displaying current points  
+        scoreBoard.textContent = `Your Score: ${currentPoints}`; // displaying current points  
     } else if (boardCell[currentPacIdx].classList.contains('specialPellet')) { // first checking if it contains the special pellet 
         boardCell[currentPacIdx].classList.remove('specialPellet') // removing pellet image
         boardCell[previousPacIdx].classList.remove('pacman'); // remove Pacman image from previous index which is the saved value in here - previousPacIdx = currentPacIdx;          
         boardCell[currentPacIdx].classList.add('pacman'); // adding pacman image ;
+        ghostIsScared();
         scaredGhost = true; // will have to figure out how to set him to scared for a short amount of time    
         strongPacman = true; // might be redundant 
         currentPoints = currentPoints + 200; // adding 200 points to current points
-        scoreBoard.textContent = currentPoints;  // displaying current points 
+        scoreBoard.textContent = `Your Score: ${currentPoints}`;  // displaying current points 
     } else {
         boardCell[previousPacIdx].classList.remove('pacman'); // remove Pacman image from previous index which is the saved value in here - previousPacIdx = currentPacIdx; 
         boardCell[currentPacIdx].classList.add('pacman'); // adding pacman image ; 
@@ -184,6 +187,29 @@ const pelletCollision = () => {
     checkWin();
 };
 
+//scared Ghost 
+
+const ghostIsScared = () => { // will have to set ghost change color to white for all 
+    //if (gameOver) return; 
+    scaredGhost = true;
+    console.log('ghost is now scared for 7 seconds');
+    interval = setTimeout(() => { // schedule scared ghost to last 7 seconds 
+        scaredGhost = false;
+        console.log('timer has ran out, ghost no longer scared');
+    }, 7000);
+}
+
+// ghost collision 
+
+const ghostCollision = () => {
+    if (boardCell[currentPacIdx].classList.contains('ghostOne')) {
+        boardCell[previousPacIdx].classList.remove('pacman');
+        // if (scaredGhost = false) {
+        //     gameOver = true; 
+        scoreBoard.textContent = `Game Over! Your Score: ${currentPoints}`; 
+        console.log('touched ghost'); 
+        } 
+    };  
 
 
 console.log('pac current index', currentPacIdx);
@@ -195,11 +221,44 @@ startGameButton.addEventListener('click', () => {
     init();
 });
 
+// reset game by clicking the button 
+resetGameButton.addEventListener('click', () => {
+    gameBoard = [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
+        1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 1, 2, 2, 2, 2, 2, 2, 2, 2, 1,
+        1, 4, 1, 1, 1, 2, 1, 1, 1, 2, 1, 2, 1, 1, 1, 2, 1, 1, 4, 1,
+        1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 1,
+        1, 2, 1, 1, 1, 2, 1, 2, 1, 1, 1, 1, 1, 2, 1, 2, 1, 1, 2, 1,
+        1, 2, 2, 2, 2, 2, 1, 2, 2, 2, 1, 2, 2, 2, 1, 2, 2, 2, 2, 1,
+        1, 1, 1, 1, 1, 2, 1, 1, 1, 2, 1, 2, 1, 1, 1, 2, 1, 1, 1, 1,
+        1, 1, 1, 1, 1, 2, 1, 2, 2, 2, 5, 2, 2, 2, 2, 2, 2, 2, 1, 1,
+        1, 1, 1, 1, 1, 2, 1, 2, 1, 1, 2, 1, 1, 2, 1, 1, 1, 2, 1, 1,
+        1, 2, 2, 2, 2, 2, 2, 2, 1, 6, 7, 8, 1, 2, 1, 1, 1, 2, 1, 1,
+        1, 2, 1, 1, 1, 2, 1, 2, 1, 1, 1, 1, 1, 2, 2, 2, 2, 2, 2, 1,
+        1, 4, 2, 1, 2, 2, 1, 2, 2, 2, 2, 2, 2, 2, 1, 1, 1, 1, 4, 1,
+        1, 1, 2, 1, 2, 1, 1, 2, 1, 1, 1, 1, 1, 2, 2, 2, 2, 2, 2, 1,
+        1, 2, 2, 2, 2, 1, 2, 2, 2, 2, 1, 2, 2, 2, 1, 2, 1, 1, 1, 1,
+        1, 2, 1, 1, 1, 1, 2, 1, 1, 2, 1, 2, 1, 1, 1, 2, 2, 2, 1, 1,
+        1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 3, 2, 2, 2, 2, 2, 1, 2, 1, 1,
+        1, 2, 1, 1, 1, 2, 1, 2, 1, 1, 1, 1, 2, 1, 1, 1, 1, 2, 2, 1,
+        1, 2, 1, 1, 1, 2, 1, 2, 1, 1, 1, 1, 2, 1, 1, 1, 1, 1, 2, 1,
+        1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 1,
+        1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
+    ];
+    currentPoints = 0;
+    scoreBoard.textContent = `Your Score: ${currentPoints}`;
+    // boardCell[previousPacIdx].classList.remove('pacman'); // remove Pacman image from previous index which is the saved value in here - previousPacIdx = currentPacIdx;          
+    // boardCell[currentPacIdx].classList.add('pacman'); // adding pacman image ;
+    init();
+    gameOver = false;
+    //clearTimeout(interval); - for the scared ghost?
+    console.log('are you reset', resetGameButton);
+})
+
+
+//bug log - 
+// reset button - works but when clicked, pacman resumes from his last spot, somehow need to clear pacman and place him at his starting point 
 
 // Pacman is placed at i = 310 at the start of game 
 // Ghosts: ghostOne - i = 150, ghostTwo - i = 189, ghostThree - i = 190; ghostFour - i = 191;
 // Special pellet is placed at i = 41, 58, 221, 238 
 
-
-/*
-Visual re-rendering → update the DOM (boardCell) so Pac-Man actually appears in his new spot. */
