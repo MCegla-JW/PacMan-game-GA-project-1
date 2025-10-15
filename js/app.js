@@ -41,28 +41,19 @@ let totalScore = 2590;
 let scaredGhost = false;
 let strongPacman = false; // may not need it as scaredGhost will indicate Pacman ate the strong pellet 
 let gameOver = false;
-let specialPellet = 4; // not sure if needed 
-let previousPacIdx;
+//let specialPellet = 4; // not sure if needed 
+let previousPacIdx = 310;
 let ghostPositions = [gameBoard.indexOf(5), gameBoard.indexOf(6), gameBoard.indexOf(7), gameBoard.indexOf(8)]; // an array of all 4 ghost postions 
 let currentGhostOneIdx = ghostPositions[0];
 let previousGhostOneIdx = currentGhostOneIdx;
-let previousGhostTwoIdx;
-let previousGhostThreeIdx;
-let previousGhostFourIdx;
-
-console.log('ghost One current index is', currentGhostOneIdx);
 let currentGhostTwoIdx = ghostPositions[1];
-console.log('ghost Two current incex is', currentGhostTwoIdx);
+let previousGhostTwoIdx = currentGhostTwoIdx;
 let currentGhostThreeIdx = ghostPositions[2]
-console.log('ghost Three current index is', currentGhostThreeIdx);
-let currentGhostFourIdx = ghostPositions[3]
-console.log('ghost Four current index is', currentGhostFourIdx);
+let previousGhostThreeIdx = currentGhostThreeIdx
+let currentGhostFourIdx = ghostPositions[3];
+let previousGhostFourIdx = currentGhostFourIdx;
 let currentPacIdx = gameBoard.indexOf(3); // this is pacmans current index 
-console.log('pacman current index is', currentPacIdx);
 
-//let ghost = 
-//let pellet = 
-//let specialPellet = 
 
 /*------------------------ Cached Element References ------------------------*/
 const boardCell = document.querySelectorAll('.cell'); // selecting a square from the grid
@@ -127,8 +118,6 @@ const init = () => {
 
 const movePacman = () => {
     document.addEventListener('keydown', (evt) => {
-        // const pacMan = document.querySelector('.pacman'); // Pacman will be fetched anew everytime this function runs not sure this is working 
-        // console.log('am i showing', pacMan);
         previousPacIdx = currentPacIdx; // storing the value of currentPacIndex before any changes are made to it 
         let leftPacIdx = currentPacIdx - 1; // possible pacman index when moving left 
         console.log('current index to pac left', leftPacIdx);
@@ -159,7 +148,6 @@ const movePacman = () => {
 
 };
 
-//movePacman();
 
 
 const checkWin = () => { // this will be called inside the collison pellet function which in turn will be called in movePacman 
@@ -183,9 +171,8 @@ const pelletCollision = () => {
         boardCell[currentPacIdx].classList.remove('specialPellet') // removing pellet image
         boardCell[previousPacIdx].classList.remove('pacman'); // remove Pacman image from previous index which is the saved value in here - previousPacIdx = currentPacIdx;          
         boardCell[currentPacIdx].classList.add('pacman'); // adding pacman image ;
+        scaredGhost = true;
         ghostIsScared();
-        scaredGhost = true; // will have to figure out how to set him to scared for a short amount of time    
-        strongPacman = true; // might be redundant 
         currentPoints = currentPoints + 200; // adding 200 points to current points
         scoreBoard.textContent = `Your Score: ${currentPoints}`;  // displaying current points 
     } else {
@@ -197,8 +184,13 @@ const pelletCollision = () => {
 
 //scared Ghost 
 
+let scaredTimer = null; // set to null to keep track if theres an active timer and prevent conflicts 
+
 const ghostIsScared = () => { // will have to set ghost change color to white for all 
     //if (gameOver) return; 
+    if (scaredTimer) { // clear any previous timer 
+        clearTimeout(scaredTimer);
+    }
     if (scaredGhost === true) {
         boardCell[currentGhostOneIdx].classList.remove('ghostOne');
         boardCell[currentGhostOneIdx].classList.add('scaredGhost');
@@ -213,7 +205,7 @@ const ghostIsScared = () => { // will have to set ghost change color to white fo
         boardCell[currentGhostFourIdx].classList.add('scaredGhost');
     }
     console.log('ghost is now scared for 7 seconds');
-    interval = setTimeout(() => { // schedule scared ghost to last 7 seconds 
+    scaredTimer = setTimeout(() => { // schedule scared ghost to last 7 seconds 
         scaredGhost = false;
         boardCell[currentGhostOneIdx].classList.remove('scaredGhost');
         boardCell[currentGhostOneIdx].classList.add('ghostOne');
@@ -223,22 +215,66 @@ const ghostIsScared = () => { // will have to set ghost change color to white fo
         boardCell[currentGhostThreeIdx].classList.add('ghostThree');
         boardCell[currentGhostFourIdx].classList.remove('scaredGhost');
         boardCell[currentGhostFourIdx].classList.add('ghostFour');
+        scaredTimer = null;
     }, 7000);
-    console.log('timer has ran out, ghost no longer scared');
 };
 
 // ghost move timer for automatic ghost movement 
 
-let intervalGhost; 
+let intervalGhost;
+let intervalGhostOne;
+let intervalGhostTwo;
+let intervalGhostThree;
+let intervalGhostFour;
+let firstTimeGhostRelease = true;
 
 const startGhostMovement = () => {
     clearInterval(intervalGhost); // clear any exisitng timer
-    intervalGhost = setInterval(() => {
+    clearInterval(intervalGhostOne);
+    clearInterval(intervalGhostTwo);
+    clearInterval(intervalGhostThree);
+    clearInterval(intervalGhostFour);
+    if (firstTimeGhostRelease === true) {
+        setTimeout(() => {
+            intervalGhostOne = setInterval(() => {
+                ghostOneMove();
+            }, 1000); // this is the ghost speed while other ghosts are leaving the pen 
+        }, 1000); // delay before he starts moving
+        setTimeout(() => {
+            intervalGhostTwo = setInterval(() => {
+                ghostTwoMove();
+            }, 1000); // this is the ghost speed while other ghosts are leaving the pen 
+        }, 3000); // delay before he starts moving
+        setTimeout(() => {
+            intervalGhostThree = setInterval(() => {
+                ghostThreeMove();
+            }, 1000); // this is the ghost speed while other ghosts are leaving the pen 
+        }, 2500); // delay before he starts moving 
+        setTimeout(() => {
+            intervalGhostFour = setInterval(() => {
+                ghostFourMove();
+            }, 1000); // this is the ghost speed while other ghosts are leaving the pen 
+        }, 6000); // delay before he starts moving 
+        firstTimeGhostRelease = false;
+    } else { // this starts running once they have all left the pen and are ready to move at a synchronized speed
         console.log('ghost is moving');
-        //console.log('next step for ghost', findGhostNextStep());
-        ghostOneMove(); // this will be popuated with other ghosts ghostTwoMove() etc. 
-    }, 1000);
-}
+        intervalGhostOne = setInterval(() => { // this is movement for the rest of the game 
+            ghostOneMove();
+        }, 1000);
+        intervalGhostTwo = setInterval(() => {
+            ghostTwoMove();
+        }, 1000);
+        intervalGhostThree = setInterval(() => {
+            ghostThreeMove();
+        }, 1000);
+        intervalGhostFour = setInterval(() => {
+            ghostFourMove();
+        }, 1000);
+    }
+};
+
+
+// make scared ghost move faster 
 
 // Dijkstra algorithm attemp for pathfinding 
 
@@ -289,26 +325,26 @@ const getPaths = (gameBoard, currentGhostOneIdx) => { // find all possible walka
 
 // ghosts pathfinding 
 
-const findBestPathToPacman = (gameBoard, currentGhostOneIdx, currentPacIdx) => { // gameboard - grid checked, currentGhostOneIdx - startIdx, currentPacIdx - targetIdx
-    const queue = [currentGhostOneIdx];
+const findBestPathToPacman = (gameGrid, currentGhostIdx, targetPacIdx) => { // gameboard - grid checked, currentGhostOneIdx - startIdx, currentPacIdx - targetIdx
+    const queue = [currentGhostIdx];
     const visited = new Set();
     const previous = {};
 
-    visited.add(currentGhostOneIdx);
+    visited.add(currentGhostIdx);
 
     while (queue.length > 0) {
         const current = queue.shift();
 
-        if (current === currentPacIdx) {
+        if (current === targetPacIdx) {
             const path = [];
-            let node = currentPacIdx;
-            while (node !== currentGhostOneIdx) {
+            let node = targetPacIdx;
+            while (node !== currentGhostIdx) {
                 path.unshift(node);
                 node = previous[node];
             }
             return path;
         }
-        const walkablePaths = getPaths(gameBoard, current); // show all walkable paths for current Ghost one position that dont include walls 
+        const walkablePaths = getPaths(gameGrid, current); // show all walkable paths for current Ghost one position that dont include walls 
         // looping through each walkable path 
         for (let i = 0; i < walkablePaths.length; i++) {
             const walkablePath = walkablePaths[i];
@@ -322,17 +358,90 @@ const findBestPathToPacman = (gameBoard, currentGhostOneIdx, currentPacIdx) => {
     return [];
 };
 
-const ghostOneMove = () => { // currently works for one ghost and i dont know if i need it once dijkstra is done 
+// ghost movement function 
+
+// ghostOne 
+
+const ghostOneMove = () => {
     const path = findBestPathToPacman(gameBoard, currentGhostOneIdx, currentPacIdx); // find path to pacman 
     if (path.length > 0) { // if there is a path, move ghost to next tile
         const nextGhostStep = path[0]; // start moving along the path from position 0
-        boardCell[previousGhostOneIdx].classList.remove('ghostOne'); 
-        previousGhostOneIdx = currentGhostOneIdx; 
+        boardCell[previousGhostOneIdx].classList.remove('ghostOne', 'scaredGhost');
+        previousGhostOneIdx = currentGhostOneIdx;
         currentGhostOneIdx = nextGhostStep;
-        boardCell[currentGhostOneIdx].classList.add('ghostOne'); 
-    } 
-    //currentGhostOneIdx = findGhostNextStep(currentGhostOneIdx); // currentGhostOneIdx = 150 = 150 + 1
-    console.log('Ghost One is here', currentGhostOneIdx);
+        if (scaredGhost) {
+            boardCell[currentGhostOneIdx].classList.add('scaredGhost');
+            boardCell[previousGhostOneIdx].classList.remove('ghostOne');
+            boardCell[previousGhostOneIdx].classList.remove('scaredGhost');
+        } else {
+            boardCell[previousGhostOneIdx].classList.remove('ghostOne');
+            boardCell[currentGhostOneIdx].classList.add('ghostOne');
+        }
+    }
+    ghostCollision();
+};
+
+// ghost Two 
+
+const ghostTwoMove = () => {
+    const path = findBestPathToPacman(gameBoard, currentGhostTwoIdx, currentPacIdx); // find path to pacman 
+    if (path.length > 0) { // if there is a path, move ghost to next tile
+        const nextGhostStep = path[0]; // start moving along the path from position 0
+        boardCell[previousGhostTwoIdx].classList.remove('ghostTwo', 'scaredGhost');
+        previousGhostTwoIdx = currentGhostTwoIdx;
+        currentGhostTwoIdx = nextGhostStep;
+        if (scaredGhost) {
+            boardCell[currentGhostTwoIdx].classList.add('scaredGhost');
+            boardCell[previousGhostTwoIdx].classList.remove('ghostTwo');
+            boardCell[previousGhostTwoIdx].classList.remove('scaredGhost');
+        } else {
+            boardCell[previousGhostTwoIdx].classList.remove('ghostTwo');
+            boardCell[currentGhostTwoIdx].classList.add('ghostTwo');
+        }
+    }
+    ghostCollision();
+};
+
+// ghost Three
+
+const ghostThreeMove = () => {
+    const path = findBestPathToPacman(gameBoard, currentGhostThreeIdx, currentPacIdx); // find path to pacman 
+    if (path.length > 0) { // if there is a path, move ghost to next tile
+        const nextGhostStep = path[0]; // start moving along the path from position 0
+        boardCell[previousGhostThreeIdx].classList.remove('ghostThree', 'scaredGhost');
+        previousGhostThreeIdx = currentGhostThreeIdx;
+        currentGhostThreeIdx = nextGhostStep;
+        if (scaredGhost) {
+            boardCell[currentGhostThreeIdx].classList.add('scaredGhost');
+            boardCell[previousGhostThreeIdx].classList.remove('ghostThree');
+            boardCell[previousGhostThreeIdx].classList.remove('scaredGhost');
+        } else {
+            boardCell[previousGhostThreeIdx].classList.remove('ghostThree');
+            boardCell[currentGhostThreeIdx].classList.add('ghostThree');
+        }
+    }
+    ghostCollision();
+};
+
+// ghost Four
+
+const ghostFourMove = () => {
+    const path = findBestPathToPacman(gameBoard, currentGhostFourIdx, currentPacIdx); // find path to pacman 
+    if (path.length > 0) { // if there is a path, move ghost to next tile
+        const nextGhostStep = path[0]; // start moving along the path from position 0
+        boardCell[previousGhostFourIdx].classList.remove('ghostFour', 'scaredGhost');
+        previousGhostFourIdx = currentGhostFourIdx;
+        currentGhostFourIdx = nextGhostStep;
+        if (scaredGhost) {
+            boardCell[currentGhostFourIdx].classList.add('scaredGhost');
+            boardCell[previousGhostFourIdx].classList.remove('ghostFour');
+            boardCell[previousGhostFourIdx].classList.remove('scaredGhost');
+        } else {
+            boardCell[previousGhostFourIdx].classList.remove('ghostFour');
+            boardCell[currentGhostFourIdx].classList.add('ghostFour');
+        }
+    }
+    ghostCollision();
 };
 
 // ghost collision function with Pacman 
@@ -348,7 +457,7 @@ const ghostCollision = () => {
             scoreBoard.textContent = `Game Over! Your Score: ${currentPoints}. Click Reset Game to play again!`;
             console.log('touched ghost');
         } else {
-            console.log('ghost will be sent to pen for a bit')
+            console.log('just walk through them for now')
         }
     };
 };
@@ -358,34 +467,6 @@ console.log('pac current index', currentPacIdx);
 
 console.log('Ghost One can move', findGhostNextStep(currentGhostOneIdx));
 console.log('get ghost one paths', getPaths(gameBoard, currentGhostOneIdx));
-
-
-
-// const ghostGetClosestPath = (gameBoard, start) => {
-//     let distances = {}; // store shortest distance from ghost starting node to Pacman 
-//     let visited = new Set(); // keep track of nodes already processed 
-//     const nodes = Object.keys(gameBoard); // get all the nodes of the graph 
-
-//     for (let node of nodes) {
-//         distances[node] = Infinity;
-//     }
-//     distances[start] = 0; // the distance from the start node to itself is 0 
-//     while (nodes.length) { // loop until all nodes are visited 
-//         nodes.sort((a, b) => distances[a] - distances[b]); // sort nodes by distance and pick the closest univisite node (how do i make sure the wall isnt included)
-//         let closestNode = nodes.shift();
-//         if (distances[closestNode] === Infinity) break; // if the shortest distance to the closest node is still Infinity, then remain
-//         visited.add(closestNode); // mark the chosen node as visited 
-//         for (let neighbor in gameBoard[closestNode]) { // for each neighbouring node of the current node 
-//             if (!visited.has(neighbor)) { //if the neighbour hasnt been visited yet
-//                 let newDistance = distances[closestNode] + gameBoard[closestNode] [neighbor]; // calclulate tentative distance to the neighbour node 
-//                 if (newDistance < distances[neighbor]) { // if the newly calcualted distance is shorter that the previously known 
-//                     distances[neighbor] = newDistance; // update the shortest distance to this neighbour 
-//                 }
-//             }
-//         }
-//     }
-//     return distances; // return the shortest distance from the start node to all nodes 
-// };
 
 
 
@@ -422,6 +503,8 @@ resetGameButton.addEventListener('click', () => {
         1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
     ];
     currentPoints = 0;
+    scaredGhost = false;
+     firstTimeGhostRelease = true;
     scoreBoard.textContent = `Your Score: ${currentPoints}`;
     ghostPositions = [gameBoard.indexOf(5), gameBoard.indexOf(6), gameBoard.indexOf(7), gameBoard.indexOf(8)];
     currentGhostOneIdx = ghostPositions[0];
@@ -430,21 +513,23 @@ resetGameButton.addEventListener('click', () => {
     currentGhostThreeIdx = ghostPositions[2];
     currentGhostFourIdx = ghostPositions[3];
     boardCell.forEach(cell => {
-        cell.classList.remove('pacman', 'ghostOne', 'ghostTwo', 'ghostThree', 'ghostFour', 'pellets', 'specialPellets', 'wall')
+        cell.classList.remove('pacman', 'ghostOne', 'ghostTwo', 'ghostThree', 'ghostFour', 'pellet', 'specialPellet', 'wall')
     });
     currentPacIdx = gameBoard.indexOf(3);
-    previousPacIdx = currentPacIdx;   
+    previousPacIdx = currentPacIdx;
     gameOver = false;
     placeGameElements();
     startGhostMovement();
     console.log('are you reset', resetGameButton);
-});
+})
 
 
 //bug log - 
 // reset button - works but when clicked, pacman resumes from his last spot, somehow need to clear pacman and place him at his starting point 
+// reset button - all previous scared ghosts stay on the board 
 // start button - when clicked at end of game instead of reset, shows pacmans whole journey from previous game 
-// on @age load, ghost One visible and moving before start button clicked 
+// on page load, ghost One visible and moving before start button clicked 
+// two ghostsOne are following pacman across the board 
 
 // Pacman is placed at i = 310 at the start of game 
 // Ghosts: ghostOne - i = 150, ghostTwo - i = 189, ghostThree - i = 190; ghostFour - i = 191;
