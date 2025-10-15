@@ -193,17 +193,33 @@ const pelletCollision = () => {
 
 const ghostIsScared = () => { // will have to set ghost change color to white for all 
     //if (gameOver) return; 
-    scaredGhost = true;
-    boardCell[currentGhostOneIdx].classList.remove('ghostOne');
-    boardCell[currentGhostOneIdx].classList.add('scaredGhost');
+    if (scaredGhost = true) {
+        boardCell[currentGhostOneIdx].classList.remove('ghostOne');
+        boardCell[currentGhostOneIdx].classList.add('scaredGhost');
+    } if (scaredGhost = true) {
+        boardCell[currentGhostTwoIdx].classList.remove('ghostTwo');
+        boardCell[currentGhostTwoIdx].classList.add('scaredGhost');
+    } if (scaredGhost = true) {
+        boardCell[currentGhostThreeIdx].classList.remove('ghostThree');
+        boardCell[currentGhostThreeIdx].classList.add('scaredGhost');
+    } if (scaredGhost = true) {
+        boardCell[currentGhostFourIdx].classList.remove('ghostFour');
+        boardCell[currentGhostFourIdx].classList.add('scaredGhost');
+    }
     console.log('ghost is now scared for 7 seconds');
     interval = setTimeout(() => { // schedule scared ghost to last 7 seconds 
         scaredGhost = false;
-        console.log('timer has ran out, ghost no longer scared');
         boardCell[currentGhostOneIdx].classList.remove('scaredGhost');
         boardCell[currentGhostOneIdx].classList.add('ghostOne');
-    }, 7000);
-}
+        boardCell[currentGhostTwoIdx].classList.remove('scaredGhost');
+        boardCell[currentGhostTwoIdx].classList.add('ghostTwo');    
+        boardCell[currentGhostThreeIdx].classList.remove('scaredGhost');
+        boardCell[currentGhostThreeIdx].classList.add('ghostThree');    
+        boardCell[currentGhostFourIdx].classList.remove('scaredGhost');
+        boardCell[currentGhostFourIdx].classList.add('ghostFour');    
+        }, 7000);
+        console.log('timer has ran out, ghost no longer scared');
+};
 
 // ghost move timer for automatic ghost movement 
 
@@ -225,7 +241,7 @@ ghostMoveTimer();
 //     return ghostNextStep; // this is current ghost index + 1 
 // }
 
-const ghostOneMove = () => {
+const ghostOneMove = () => { // currently works for one ghost and i dont know if i need it once dijkstra is done 
     previousGhostOneIdx = currentGhostOneIdx; 
     let leftGhostOneIdx = currentGhostOneIdx - 1;
     console.log('next index to ghost one to the left is', leftGhostOneIdx);
@@ -344,6 +360,8 @@ resetGameButton.addEventListener('click', () => {
 
 //bug log - 
 // reset button - works but when clicked, pacman resumes from his last spot, somehow need to clear pacman and place him at his starting point 
+// start button - when clicked at end of game instead of reset, shows pacmans whole journey from previous game 
+// on @age load, ghost One visible and moving before start button clicked 
 
 // Pacman is placed at i = 310 at the start of game 
 // Ghosts: ghostOne - i = 150, ghostTwo - i = 189, ghostThree - i = 190; ghostFour - i = 191;
