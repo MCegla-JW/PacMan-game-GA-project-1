@@ -55,10 +55,10 @@ let currentPacIdx = gameBoard.indexOf(3); // this is pacmans current index
 // an array of all four ghost positions on the board at start of gae¥me
 let ghostPositions = [
     gameBoard.indexOf(5),
-    gameBoard.indexOf(6), 
-    gameBoard.indexOf(7), 
+    gameBoard.indexOf(6),
+    gameBoard.indexOf(7),
     gameBoard.indexOf(8)
-]; 
+];
 
 
 let currentGhostOneIdx = ghostPositions[0];
@@ -439,11 +439,23 @@ const ghostFourMove = () => {
 
 // ghost collision function with Pacman 
 const ghostCollision = () => {
+    if (scaredGhost === true) {
+        if (boardCell[currentPacIdx].classList.contains('scaredGhost')){
+            boardCell[currentPacIdx].classList.remove('scaredGhost');
+            boardCell[currentPacIdx].classList.add('pacman');
+        } else {
+            boardCell[currentGhostOneIdx].classList.add('scaredGhost');
+            boardCell[currentGhostTwoIdx].classList.add('scaredGhost');
+            boardCell[currentGhostThreeIdx].classList.add('scaredGhost');
+            boardCell[currentGhostFourIdx].classList.add('scaredGhost');
+        }
+    }
     if (boardCell[currentPacIdx].classList.contains('ghostOne') ||
         boardCell[currentPacIdx].classList.contains('ghostTwo') ||
         boardCell[currentPacIdx].classList.contains('ghostThree') ||
         boardCell[currentPacIdx].classList.contains('ghostFour')) {
-        boardCell[previousPacIdx].classList.remove('pacman')
+        boardCell[previousPacIdx].classList.remove('pacman');
+        boardCell[currentPacIdx].classList.add('pacman');
         if (scaredGhost === false) {
             gameOver = true;
             stopAllGhosts();
@@ -509,14 +521,14 @@ const resetGame = () => {
     boardCell.forEach(cell => {
         cell.classList.remove(
             'pacman',
-            'pacman-right', 
-            'ghostOne', 
-            'ghostTwo', 
-            'ghostThree', 
-            'ghostFour', 
-            'pellet', 
-            'specialPellet', 
-            'wall', 
+            'pacman-right',
+            'ghostOne',
+            'ghostTwo',
+            'ghostThree',
+            'ghostFour',
+            'pellet',
+            'specialPellet',
+            'wall',
             'scaredGhost')
     });
     currentPacIdx = gameBoard.indexOf(3);
