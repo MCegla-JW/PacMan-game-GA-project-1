@@ -70,7 +70,7 @@ const startGameButton = document.querySelector('.start-button'); // Start Game b
 
 const scoreBoard = document.querySelector('.score-board'); // Score Board 
 
-//const holdingImage = document.querySelector('#opening-image'); // Image that will appear before button is clicked 
+const holdingImage = document.getElementById('opening-image'); // Image that will appear before button is clicked 
 
 /*------------------------ Functions ------------------------*/
 
@@ -101,6 +101,10 @@ const placeGameElements = () => {
 // Initialize game on load of page 
 const init = () => {
     placeGameElements();
+    if (holdingImage) { // checking if holding image exists, null would mean it doesnt 
+        holdingImage.remove();
+    };
+
 };
 
 // Function to clear pellet cell and leave empty 
@@ -503,7 +507,7 @@ const resetGame = () => {
     gameOver = false;
     placeGameElements();
     startGhostMovement();
-    startGameButton.innerHTML = 'Start Game'
+    startGameButton.innerHTML = 'Start Game';
 }
 
 
