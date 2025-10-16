@@ -12,6 +12,8 @@ Game Board elements:
 8 - ghostFour - orange
  */
 
+/*--------------------------------- GAME BOARD -------------------------------------*/
+
 let gameBoard = [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
     1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 1, 2, 2, 2, 2, 2, 2, 2, 2, 1,
     1, 4, 1, 1, 1, 2, 1, 1, 1, 2, 1, 2, 1, 1, 1, 2, 1, 1, 4, 1,
@@ -34,36 +36,58 @@ let gameBoard = [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
     1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
 ];
 
-/*---------------------------- Variables (state) ----------------------------*/
+/*--------------------------------- GAME STATE -------------------------------------*/
+
 let currentPoints = 0;
 let totalScore = 2590;
 let scaredGhost = false;
 let gameOver = false;
+let firstTimeGhostRelease = true;
+let scaredTimer = null; // set to null to keep track if theres an active timer and prevent conflicts 
+
+/*------------------------------PACMAN STATE -------------------------------------------*/
+
 let previousPacIdx = 310;
-let ghostPositions = [gameBoard.indexOf(5), gameBoard.indexOf(6), gameBoard.indexOf(7), gameBoard.indexOf(8)]; // an array of all 4 ghost postions 
+let currentPacIdx = gameBoard.indexOf(3); // this is pacmans current index 
+
+/*------------------------------ GHOST STATE ------------------------------------------*/
+
+// an array of all four ghost positions on the board at start of gae¥me
+let ghostPositions = [
+    gameBoard.indexOf(5),
+    gameBoard.indexOf(6), 
+    gameBoard.indexOf(7), 
+    gameBoard.indexOf(8)
+]; 
+
+
 let currentGhostOneIdx = ghostPositions[0];
 let previousGhostOneIdx = currentGhostOneIdx;
+
 let currentGhostTwoIdx = ghostPositions[1];
 let previousGhostTwoIdx = currentGhostTwoIdx;
+
 let currentGhostThreeIdx = ghostPositions[2]
 let previousGhostThreeIdx = currentGhostThreeIdx
+
 let currentGhostFourIdx = ghostPositions[3];
 let previousGhostFourIdx = currentGhostFourIdx;
-let currentPacIdx = gameBoard.indexOf(3); // this is pacmans current index 
-let scaredTimer = null; // set to null to keep track if theres an active timer and prevent conflicts 
+
+/*-------------------------- TIMERS & INTERVALS --------------------------------*/
+
 let intervalGhost;
 let intervalGhostOne;
 let intervalGhostTwo;
 let intervalGhostThree;
 let intervalGhostFour;
-let firstTimeGhostRelease = true;
+
 let timeoutGhostOne;
 let timeoutGhostTwo;
 let timeoutGhostThree;
 let timeoutGhostFour;
 
-
 /*------------------------ Cached Element References ------------------------*/
+
 const boardCell = document.querySelectorAll('.cell'); // selecting a square from the grid 400 cells in grid 
 
 const startGameButton = document.querySelector('.start-button'); // Start Game button
@@ -72,10 +96,9 @@ const scoreBoard = document.querySelector('.score-board'); // Score Board
 
 const holdingImage = document.getElementById('opening-image'); // Image that will appear before button is clicked 
 
-/*------------------------ Functions ------------------------*/
+/*------------------------------------- Functions -----------------------------------*/
 
 // place elements on gameBoard - check index and add classlist - if 
-
 const placeGameElements = () => {
     for (let i = 0; i < gameBoard.length; i++) {
         if (gameBoard[i] === 1) {
@@ -107,11 +130,8 @@ const init = () => {
 
 };
 
-// Function to clear pellet cell and leave empty 
 
 // Getting pacman' current index on board as well as the next index to his left, right, up and down 
-
-
 const movePacman = (evt) => {
     if (gameOver === false) {
         previousPacIdx = currentPacIdx; // storing the value of currentPacIndex before any changes are made to it 
@@ -139,17 +159,18 @@ const movePacman = (evt) => {
     };
 };
 
+//check win 
 const checkWin = () => { // this will be called inside the collison pellet function which in turn will be called in movePacman 
     if (currentPoints === totalScore) {
-        scoreBoard.textContent = `You win! Your Score is ${totalScore}`
+        scoreBoard.textContent = `You win! Your Score is ${totalScore}!`
         startGameButton.innerHTML = 'Play Again!'
         gameOver = true;
         stopAllGhosts();
     }
 };
 
-// see if i can include ghost collision in this function and rename it
 
+//pacman - pellet collision
 const pelletCollision = () => {
     if (boardCell[currentPacIdx].classList.contains('pellet')) { // first checking if it contains the pellet 
         boardCell[currentPacIdx].classList.remove('pellet'); // removing pellet image
@@ -173,7 +194,6 @@ const pelletCollision = () => {
 };
 
 //scared Ghost 
-
 const ghostIsScared = () => { // will have to set ghost change color to white for all 
     if (scaredTimer) { // clear any previous timer 
         clearTimeout(scaredTimer);
@@ -206,8 +226,6 @@ const ghostIsScared = () => { // will have to set ghost change color to white fo
 };
 
 // ghost move timer for automatic ghost movement 
-
-
 const startGhostMovement = () => {
     stopAllGhosts();
     if (firstTimeGhostRelease === true) {
@@ -248,6 +266,7 @@ const startGhostMovement = () => {
     }
 };
 
+// stop all ghost movement (to be used in gameOver)
 const stopAllGhosts = () => {
     clearInterval(intervalGhost); // clear any exisitng intervals and timeouts
     clearInterval(intervalGhostOne);
@@ -260,10 +279,6 @@ const stopAllGhosts = () => {
     clearTimeout(timeoutGhostFour);
 };
 
-// make scared ghost move faster 
-
-// Dijkstra algorithm attemp for pathfinding 
-
 // gameBoard - is the graph, its a list of nodes (400) = tiles 
 // each index is a vertex (vertices for plural) and its a point in the graph - location, node etc.
 // vertex is one positon in the graph where edges (connections) can start or end eg. currentGhostOneIdx  and is a vertex = one position 
@@ -275,14 +290,16 @@ const stopAllGhosts = () => {
 // value 2 = path - valid neighbour, can move there 
 // each valid neighbour vertex is connected to the current vertex by an edge (road)
 
-// ghost move function test
 
-const width = 20; // lenght of the board (20 tiles wide)
+
+
 // x - the column number 
 // y - the row number 
 // % - modulo operator always returns a whole number 
 // using math.floor to round down to the nearest whole number 
 
+// find ghost next step 
+const width = 20; // lenght of the board (20 tiles wide)
 const findGhostNextStep = (currentGhostOneIdx) => { // look for all possible paths from current position, since its a grid, theres only four directions
     const neighbourTiles = [];
     const x = currentGhostOneIdx % width;
@@ -294,23 +311,14 @@ const findGhostNextStep = (currentGhostOneIdx) => { // look for all possible pat
     if (y < 19) neighbourTiles.push(currentGhostOneIdx + width); // down
 
     return neighbourTiles;
-}
-
-//findGhostNextStep();
+};
 
 // Filter neighbouring paths that are walkable (not walls)
-
-
 const getPaths = (gameBoard, currentGhostOneIdx) => { // find all possible walkable paths out of the array of all neigbouring paths that we got from findGhostNextStep function, filter wheter a fall or not and return only walkable paths array
     return findGhostNextStep(currentGhostOneIdx).filter(nextGhostIdx => gameBoard[nextGhostIdx] != 1);
 };
 
-//getPaths();
-
-//ghostMoveTimer(); works, commented out so the ghost is not constantly moving
-
 // ghosts pathfinding 
-
 const findBestPathToPacman = (gameGrid, currentGhostIdx, targetPacIdx) => { // gameboard - grid checked, currentGhostOneIdx - startIdx, currentPacIdx - targetIdx
     const queue = [currentGhostIdx];
     const visited = new Set();
@@ -344,10 +352,8 @@ const findBestPathToPacman = (gameGrid, currentGhostIdx, targetPacIdx) => { // g
     return [];
 };
 
-// ghost movement function 
-
-// ghostOne 
-
+// ghost movement function - one per ghost
+//ghost One
 const ghostOneMove = () => {
     const path = findBestPathToPacman(gameBoard, currentGhostOneIdx, currentPacIdx); // find path to pacman 
     if (path.length > 0) { // if there is a path, move ghost to next tile
@@ -368,7 +374,6 @@ const ghostOneMove = () => {
 };
 
 // ghost Two 
-
 const ghostTwoMove = () => {
     const path = findBestPathToPacman(gameBoard, currentGhostTwoIdx, currentPacIdx); // find path to pacman 
     if (path.length > 0) { // if there is a path, move ghost to next tile
@@ -389,7 +394,6 @@ const ghostTwoMove = () => {
 };
 
 // ghost Three
-
 const ghostThreeMove = () => {
     const path = findBestPathToPacman(gameBoard, currentGhostThreeIdx, currentPacIdx); // find path to pacman 
     if (path.length > 0) { // if there is a path, move ghost to next tile
@@ -410,7 +414,6 @@ const ghostThreeMove = () => {
 };
 
 // ghost Four
-
 const ghostFourMove = () => {
     const path = findBestPathToPacman(gameBoard, currentGhostFourIdx, currentPacIdx); // find path to pacman 
     if (path.length > 0) { // if there is a path, move ghost to next tile
@@ -431,7 +434,6 @@ const ghostFourMove = () => {
 };
 
 // ghost collision function with Pacman 
-
 const ghostCollision = () => {
     if (boardCell[currentPacIdx].classList.contains('ghostOne') ||
         boardCell[currentPacIdx].classList.contains('ghostTwo') ||
@@ -444,12 +446,11 @@ const ghostCollision = () => {
             scoreBoard.textContent = `Game Over! Your Final Score Is: ${currentPoints}. Play again?`;
             startGameButton.innerHTML = 'Play Again!'
         }
-    };
+    }
 };
 
 /*------------------------ Add Event Listeners ------------------------*/
 
-//start game by clicking button 
 startGameButton.addEventListener('click', () => {
     if (gameOver === false) {
         gameOver = false;
@@ -462,6 +463,9 @@ startGameButton.addEventListener('click', () => {
     }
 });
 
+document.addEventListener('keydown', movePacman);
+
+//function to reset game state
 const resetGame = () => {
     clearInterval(intervalGhost); // stop ghost movement
     clearInterval(intervalGhostOne);
@@ -493,34 +497,30 @@ const resetGame = () => {
     scaredGhost = false;
     firstTimeGhostRelease = true;
     scoreBoard.textContent = `Your Score: ${currentPoints}`;
-    ghostPositions = [gameBoard.indexOf(5), gameBoard.indexOf(6), gameBoard.indexOf(7), gameBoard.indexOf(8)];
     currentGhostOneIdx = ghostPositions[0];
     previousGhostOneIdx = currentGhostOneIdx;
     currentGhostTwoIdx = ghostPositions[1];
     currentGhostThreeIdx = ghostPositions[2];
     currentGhostFourIdx = ghostPositions[3];
     boardCell.forEach(cell => {
-        cell.classList.remove('pacman', 'ghostOne', 'ghostTwo', 'ghostThree', 'ghostFour', 'pellet', 'specialPellet', 'wall', 'scaredGhost')
+        cell.classList.remove(
+            'pacman',
+            'pacman-right', 
+            'ghostOne', 
+            'ghostTwo', 
+            'ghostThree', 
+            'ghostFour', 
+            'pellet', 
+            'specialPellet', 
+            'wall', 
+            'scaredGhost')
     });
     currentPacIdx = gameBoard.indexOf(3);
-    previousPacIdx = 310;
     gameOver = false;
     placeGameElements();
     startGhostMovement();
     startGameButton.innerHTML = 'Start Game';
-}
-
-
-document.addEventListener('keydown', movePacman);
-
-
-
-//bug log - 
-// reset button - works but when clicked, pacman resumes from his last spot, somehow need to clear pacman and place him at his starting point 
-// reset button - all previous scared ghosts stay on the board 
-// start button - when clicked at end of game instead of reset, shows pacmans whole journey from previous game 
-// on page load, ghost One visible and moving before start button clicked 
-// two ghostsOne are following pacman across the board 
+};
 
 // Pacman is placed at i = 310 at the start of game 
 // Ghosts: ghostOne - i = 150, ghostTwo - i = 189, ghostThree - i = 190; ghostFour - i = 191;
