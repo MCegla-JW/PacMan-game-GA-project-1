@@ -145,4 +145,12 @@ header {
 
 #opening-image {
     margin-top: 20px;
+    height: 350px;
+}
+
+#instructions {
+    text-align: center;
+    line-height: 2;
+    margin-bottom: 5px;
+    font-size: 20px;
 }

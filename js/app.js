@@ -96,9 +96,11 @@ const scoreBoard = document.querySelector('.score-board'); // Score Board
 
 const holdingImage = document.getElementById('opening-image'); // Image that will appear before button is clicked 
 
+const gameInstructions = document.getElementById('instructions'); // Game instructions 
+
 /*------------------------------------- Functions -----------------------------------*/
 
-// place elements on gameBoard - check index and add classlist - if 
+// place elements on gameBoard - check index and add classlist 
 const placeGameElements = () => {
     for (let i = 0; i < gameBoard.length; i++) {
         if (gameBoard[i] === 1) {
@@ -126,8 +128,10 @@ const init = () => {
     placeGameElements();
     if (holdingImage) { // checking if holding image exists, null would mean it doesnt 
         holdingImage.remove();
-    };
-
+    }
+    if (gameInstructions) {
+        gameInstructions.remove();
+    }
 };
 
 
@@ -525,7 +529,3 @@ const resetGame = () => {
 // Pacman is placed at i = 310 at the start of game 
 // Ghosts: ghostOne - i = 150, ghostTwo - i = 189, ghostThree - i = 190; ghostFour - i = 191;
 // Special pellet is placed at i = 41, 58, 221, 238 
-
-
-// at start game have start button only, and at end game, have reset button only and 
-// when strat button is clicked, it gets replaced with reset button 
