@@ -236,37 +236,24 @@ const startGhostMovement = () => {
         timeoutGhostOne = setTimeout(() => {
             intervalGhostOne = setInterval(() => {
                 ghostOneMove();
-            }, 1000); // this is the ghost speed while other ghosts are leaving the pen 
+            }, 500); // this is the ghost speed while other ghosts are leaving the pen 
         }, 1000); // delay before he starts moving
         timeoutGhostTwo = setTimeout(() => {
             intervalGhostTwo = setInterval(() => {
                 ghostTwoMove();
-            }, 1000); // this is the ghost speed while other ghosts are leaving the pen 
+            }, 700); // this is the ghost speed while other ghosts are leaving the pen 
         }, 3000); // delay before he starts moving
         timeoutGhostThree = setTimeout(() => {
             intervalGhostThree = setInterval(() => {
                 ghostThreeMove();
-            }, 1000); // this is the ghost speed while other ghosts are leaving the pen 
+            }, 600); // this is the ghost speed while other ghosts are leaving the pen 
         }, 2500); // delay before he starts moving 
         timeoutGhostFour = setTimeout(() => {
             intervalGhostFour = setInterval(() => {
                 ghostFourMove();
-            }, 1000); // this is the ghost speed while other ghosts are leaving the pen 
+            }, 800); // this is the ghost speed while other ghosts are leaving the pen 
         }, 6000); // delay before he starts moving 
         firstTimeGhostRelease = false;
-    } else { // this starts running once they have all left the pen and are ready to move at a synchronized speed
-        intervalGhostOne = setInterval(() => { // this is movement for the rest of the game 
-            ghostOneMove();
-        }, 1050);
-        intervalGhostTwo = setInterval(() => {
-            ghostTwoMove();
-        }, 1250);
-        intervalGhostThree = setInterval(() => {
-            ghostThreeMove();
-        }, 1450);
-        intervalGhostFour = setInterval(() => {
-            ghostFourMove();
-        }, 1650);
     }
 };
 
