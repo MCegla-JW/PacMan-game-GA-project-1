@@ -20,7 +20,7 @@ let gameBoard = [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
     1, 2, 2, 2, 2, 2, 1, 2, 2, 2, 1, 2, 2, 2, 1, 2, 2, 2, 2, 1,
     1, 1, 1, 1, 1, 2, 1, 1, 1, 2, 1, 2, 1, 1, 1, 2, 1, 1, 1, 1,
     1, 1, 1, 1, 1, 2, 1, 2, 2, 2, 5, 2, 2, 2, 2, 2, 2, 2, 1, 1,
-    1, 1, 1, 1, 1, 2, 1, 2, 1, 1, 2, 1, 1, 2, 1, 1, 1, 2, 1, 1,
+    1, 1, 1, 1, 1, 2, 1, 2, 1, 1, 0, 1, 1, 2, 1, 1, 1, 2, 1, 1,
     1, 2, 2, 2, 2, 2, 2, 2, 1, 6, 7, 8, 1, 2, 1, 1, 1, 2, 1, 1,
     1, 2, 1, 1, 1, 2, 1, 2, 1, 1, 1, 1, 1, 2, 2, 2, 2, 2, 2, 1,
     1, 4, 2, 1, 2, 2, 1, 2, 2, 2, 2, 2, 2, 2, 1, 1, 1, 1, 4, 1,
@@ -109,6 +109,7 @@ const placeGameElements = () => {
 const init = () => {
     placeGameElements();
     startGhostMovement(); // start ghost movement 
+    movePacman();
 };
 
 // Function to clear pellet cell and leave empty 
@@ -118,6 +119,7 @@ const init = () => {
 
 const movePacman = () => {
     document.addEventListener('keydown', (evt) => {
+        if (gameOver === false) {
         previousPacIdx = currentPacIdx; // storing the value of currentPacIndex before any changes are made to it 
         let leftPacIdx = currentPacIdx - 1; // possible pacman index when moving left 
         console.log('current index to pac left', leftPacIdx);
@@ -144,8 +146,10 @@ const movePacman = () => {
         console.log('pacman has moved', currentPacIdx);
         pelletCollision();
         ghostCollision();
-    });
-
+        } else {
+        removeKeyListener();
+        };
+    }); 
 };
 
 
@@ -260,16 +264,16 @@ const startGhostMovement = () => {
         console.log('ghost is moving');
         intervalGhostOne = setInterval(() => { // this is movement for the rest of the game 
             ghostOneMove();
-        }, 1000);
+        }, 1050);
         intervalGhostTwo = setInterval(() => {
             ghostTwoMove();
-        }, 1000);
+        }, 1250);
         intervalGhostThree = setInterval(() => {
             ghostThreeMove();
-        }, 1000);
+        }, 1450);
         intervalGhostFour = setInterval(() => {
             ghostFourMove();
-        }, 1000);
+        }, 1650);
     }
 };
 
@@ -475,12 +479,18 @@ console.log('get ghost one paths', getPaths(gameBoard, currentGhostOneIdx));
 //start game by clicking button 
 startGameButton.addEventListener('click', () => {
     init();
-    movePacman();
+    
+
 });
 
 // reset game by clicking the button 
 resetGameButton.addEventListener('click', () => {
-    clearInterval(intervalGhost); // stop ghost movement
+    resetGame();
+    removeKeyListener();
+})
+
+const resetGame = () => {
+       clearInterval(intervalGhost); // stop ghost movement
     gameBoard = [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
         1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 1, 2, 2, 2, 2, 2, 2, 2, 2, 1,
         1, 4, 1, 1, 1, 2, 1, 1, 1, 2, 1, 2, 1, 1, 1, 2, 1, 1, 4, 1,
@@ -489,7 +499,7 @@ resetGameButton.addEventListener('click', () => {
         1, 2, 2, 2, 2, 2, 1, 2, 2, 2, 1, 2, 2, 2, 1, 2, 2, 2, 2, 1,
         1, 1, 1, 1, 1, 2, 1, 1, 1, 2, 1, 2, 1, 1, 1, 2, 1, 1, 1, 1,
         1, 1, 1, 1, 1, 2, 1, 2, 2, 2, 5, 2, 2, 2, 2, 2, 2, 2, 1, 1,
-        1, 1, 1, 1, 1, 2, 1, 2, 1, 1, 2, 1, 1, 2, 1, 1, 1, 2, 1, 1,
+        1, 1, 1, 1, 1, 2, 1, 2, 1, 1, 0, 1, 1, 2, 1, 1, 1, 2, 1, 1,
         1, 2, 2, 2, 2, 2, 2, 2, 1, 6, 7, 8, 1, 2, 1, 1, 1, 2, 1, 1,
         1, 2, 1, 1, 1, 2, 1, 2, 1, 1, 1, 1, 1, 2, 2, 2, 2, 2, 2, 1,
         1, 4, 2, 1, 2, 2, 1, 2, 2, 2, 2, 2, 2, 2, 1, 1, 1, 1, 4, 1,
@@ -504,7 +514,7 @@ resetGameButton.addEventListener('click', () => {
     ];
     currentPoints = 0;
     scaredGhost = false;
-     firstTimeGhostRelease = true;
+    firstTimeGhostRelease = true;
     scoreBoard.textContent = `Your Score: ${currentPoints}`;
     ghostPositions = [gameBoard.indexOf(5), gameBoard.indexOf(6), gameBoard.indexOf(7), gameBoard.indexOf(8)];
     currentGhostOneIdx = ghostPositions[0];
@@ -516,12 +526,16 @@ resetGameButton.addEventListener('click', () => {
         cell.classList.remove('pacman', 'ghostOne', 'ghostTwo', 'ghostThree', 'ghostFour', 'pellet', 'specialPellet', 'wall')
     });
     currentPacIdx = gameBoard.indexOf(3);
-    previousPacIdx = currentPacIdx;
+    previousPacIdx = 310;
     gameOver = false;
     placeGameElements();
     startGhostMovement();
-    console.log('are you reset', resetGameButton);
-})
+}
+
+const removeKeyListener = (evt) => {
+        document.removeEventListener('keydown', movePacman)
+};
+
 
 
 //bug log - 

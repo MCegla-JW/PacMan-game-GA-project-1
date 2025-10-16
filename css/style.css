@@ -64,7 +64,7 @@ header {
 }
 
 .pacman {
-    background-image: url(./Original_PacMan.svg.png);
+    background-image: url(./pacjo-l.GIF);
     background-size: cover;
     height: 25px;
     width: 25px;
@@ -73,7 +73,7 @@ header {
 }
 
 .specialPellet {
-    background-image: url(./special-pellet.png);
+    background-image: url(./pibu.GIF);
     background-size: cover;
     height: 25px;
     width: 25px;
@@ -89,7 +89,7 @@ header {
 }
 
 .ghostOne {
-    background-image: url(./Blinky.png);
+    background-image: url(./roomba-red-up.PNG);
     background-size: cover;
     height: 25px;
     width: 25px;
@@ -97,7 +97,7 @@ header {
 }
 
 .ghostTwo {
-    background-image: url(./Inky.png);
+    background-image: url(./roomba-cyan-up.PNG);
     background-size: cover;
     height: 25px;
     width: 25px;
@@ -105,7 +105,7 @@ header {
 }
 
 .ghostThree {
-    background-image: url(./Pink.png);
+    background-image: url(./roomba-pink-up.PNG);
     background-size: cover;
     height: 25px;
     width: 25px;
@@ -113,7 +113,7 @@ header {
 }
 
 .ghostFour {
-    background-image: url(./clyde\ 11.png);
+    background-image: url(./roomba-clyde-up.PNG);
     background-size: cover;
     height: 25px;
     width: 25px;
@@ -121,7 +121,7 @@ header {
 }
 
 .scaredGhost {
-    background-image: url(./Scared-Ghost.png);
+    background-image: url(./roomba-scared-up.PNG);
     background-size: cover;
     height: 25px;
     width: 25px;
