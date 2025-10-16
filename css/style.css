@@ -66,6 +66,15 @@ header {
     place-self: center;
 }
 
+.pacman-right {
+    background-image: url(./pacjo-r.GIF);
+    background-size: cover;
+    height: 25px;
+    width: 25px;
+    background-color: transparent;
+    place-self: center;
+}
+
 .specialPellet {
     background-image: url(./pibu.GIF);
     background-size: cover;
