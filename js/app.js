@@ -62,20 +62,16 @@ console.log('cell id', boardCell); // 400 cells in grid
 const startGameButton = document.querySelector('.start-button'); // Start Game button
 console.log('am i selected', startGameButton);
 
-const resetGameButton = document.querySelector('.reset-button'); // Reset Game button 
-console.log('am i selected', resetGameButton);
-
 const scoreBoard = document.querySelector('.score-board'); // Score Board 
 console.log('am i selected', scoreBoard);
 
-const holdingImage = document.querySelector('#opening-image'); // Image that will appear before button is clicked 
+//const holdingImage = document.querySelector('#opening-image'); // Image that will appear before button is clicked 
 
 /*------------------------ Functions ------------------------*/
 
 // place elements on gameBoard - check index and add classlist - if 
 
 const placeGameElements = () => {
-    // if (gameOver) return;
     for (let i = 0; i < gameBoard.length; i++) {
         if (gameBoard[i] === 1) {
             boardCell[i].classList.add('wall');
@@ -108,8 +104,6 @@ const placeGameElements = () => {
 // Initialize game on load of page 
 const init = () => {
     placeGameElements();
-    startGhostMovement(); // start ghost movement 
-    movePacman();
 };
 
 // Function to clear pellet cell and leave empty 
@@ -117,9 +111,8 @@ const init = () => {
 // Getting pacman' current index on board as well as the next index to his left, right, up and down 
 
 
-const movePacman = () => {
-    document.addEventListener('keydown', (evt) => {
-        if (gameOver === false) {
+const movePacman = (evt) => {
+    if (gameOver === false) {
         previousPacIdx = currentPacIdx; // storing the value of currentPacIndex before any changes are made to it 
         let leftPacIdx = currentPacIdx - 1; // possible pacman index when moving left 
         console.log('current index to pac left', leftPacIdx);
@@ -146,10 +139,7 @@ const movePacman = () => {
         console.log('pacman has moved', currentPacIdx);
         pelletCollision();
         ghostCollision();
-        } else {
-        removeKeyListener();
-        };
-    }); 
+    };
 };
 
 
@@ -157,6 +147,9 @@ const movePacman = () => {
 const checkWin = () => { // this will be called inside the collison pellet function which in turn will be called in movePacman 
     if (currentPoints === totalScore) {
         scoreBoard.textContent = `You win! Your Score is ${totalScore}`
+        startGameButton.innerHTML = 'Play Again!'
+        gameOver = true; 
+        stopAllGhosts();
     }
 };
 
@@ -191,7 +184,6 @@ const pelletCollision = () => {
 let scaredTimer = null; // set to null to keep track if theres an active timer and prevent conflicts 
 
 const ghostIsScared = () => { // will have to set ghost change color to white for all 
-    //if (gameOver) return; 
     if (scaredTimer) { // clear any previous timer 
         clearTimeout(scaredTimer);
     }
@@ -232,29 +224,30 @@ let intervalGhostThree;
 let intervalGhostFour;
 let firstTimeGhostRelease = true;
 
+let timeoutGhostOne;
+let timeoutGhostTwo;
+let timeoutGhostThree;
+let timeoutGhostFour;
+
 const startGhostMovement = () => {
-    clearInterval(intervalGhost); // clear any exisitng timer
-    clearInterval(intervalGhostOne);
-    clearInterval(intervalGhostTwo);
-    clearInterval(intervalGhostThree);
-    clearInterval(intervalGhostFour);
+    stopAllGhosts();
     if (firstTimeGhostRelease === true) {
-        setTimeout(() => {
+        timeoutGhostOne = setTimeout(() => {
             intervalGhostOne = setInterval(() => {
                 ghostOneMove();
             }, 1000); // this is the ghost speed while other ghosts are leaving the pen 
         }, 1000); // delay before he starts moving
-        setTimeout(() => {
+        timeoutGhostTwo = setTimeout(() => {
             intervalGhostTwo = setInterval(() => {
                 ghostTwoMove();
             }, 1000); // this is the ghost speed while other ghosts are leaving the pen 
         }, 3000); // delay before he starts moving
-        setTimeout(() => {
+        timeoutGhostThree = setTimeout(() => {
             intervalGhostThree = setInterval(() => {
                 ghostThreeMove();
             }, 1000); // this is the ghost speed while other ghosts are leaving the pen 
         }, 2500); // delay before he starts moving 
-        setTimeout(() => {
+        timeoutGhostFour = setTimeout(() => {
             intervalGhostFour = setInterval(() => {
                 ghostFourMove();
             }, 1000); // this is the ghost speed while other ghosts are leaving the pen 
@@ -277,6 +270,17 @@ const startGhostMovement = () => {
     }
 };
 
+const stopAllGhosts = () => {
+    clearInterval(intervalGhost); // clear any exisitng intervals and timeouts
+    clearInterval(intervalGhostOne);
+    clearInterval(intervalGhostTwo);
+    clearInterval(intervalGhostThree);
+    clearInterval(intervalGhostFour);
+    clearTimeout(timeoutGhostOne);
+    clearTimeout(timeoutGhostTwo);
+    clearTimeout(timeoutGhostThree);
+    clearTimeout(timeoutGhostFour);
+};
 
 // make scared ghost move faster 
 
@@ -373,7 +377,7 @@ const ghostOneMove = () => {
         boardCell[previousGhostOneIdx].classList.remove('ghostOne', 'scaredGhost');
         previousGhostOneIdx = currentGhostOneIdx;
         currentGhostOneIdx = nextGhostStep;
-        if (scaredGhost) {
+        if (scaredGhost === true) {
             boardCell[currentGhostOneIdx].classList.add('scaredGhost');
             boardCell[previousGhostOneIdx].classList.remove('ghostOne');
             boardCell[previousGhostOneIdx].classList.remove('scaredGhost');
@@ -458,7 +462,9 @@ const ghostCollision = () => {
         boardCell[previousPacIdx].classList.remove('pacman')
         if (scaredGhost === false) {
             gameOver = true;
-            scoreBoard.textContent = `Game Over! Your Score: ${currentPoints}. Click Reset Game to play again!`;
+            stopAllGhosts();
+            scoreBoard.textContent = `Game Over! Your Final Score Is: ${currentPoints}. Play again?`;
+            startGameButton.innerHTML = 'Play Again!'
             console.log('touched ghost');
         } else {
             console.log('just walk through them for now')
@@ -478,19 +484,23 @@ console.log('get ghost one paths', getPaths(gameBoard, currentGhostOneIdx));
 
 //start game by clicking button 
 startGameButton.addEventListener('click', () => {
-    init();
-    
-
+    if (gameOver === false) {
+        gameOver = false;
+        resetGame();
+        startGameButton.innerHTML = 'Go!'
+        init();
+    } else if (gameOver === true) {
+        resetGame();
+        startGameButton.innerHTML = 'Go!'
+    }
 });
 
-// reset game by clicking the button 
-resetGameButton.addEventListener('click', () => {
-    resetGame();
-    removeKeyListener();
-})
-
 const resetGame = () => {
-       clearInterval(intervalGhost); // stop ghost movement
+    clearInterval(intervalGhost); // stop ghost movement
+    clearInterval(intervalGhostOne);
+    clearInterval(intervalGhostTwo);
+    clearInterval(intervalGhostThree);
+    clearInterval(intervalGhostFour);
     gameBoard = [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
         1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 1, 2, 2, 2, 2, 2, 2, 2, 2, 1,
         1, 4, 1, 1, 1, 2, 1, 1, 1, 2, 1, 2, 1, 1, 1, 2, 1, 1, 4, 1,
@@ -523,18 +533,20 @@ const resetGame = () => {
     currentGhostThreeIdx = ghostPositions[2];
     currentGhostFourIdx = ghostPositions[3];
     boardCell.forEach(cell => {
-        cell.classList.remove('pacman', 'ghostOne', 'ghostTwo', 'ghostThree', 'ghostFour', 'pellet', 'specialPellet', 'wall')
+        cell.classList.remove('pacman', 'ghostOne', 'ghostTwo', 'ghostThree', 'ghostFour', 'pellet', 'specialPellet', 'wall', 'scaredGhost')
     });
     currentPacIdx = gameBoard.indexOf(3);
     previousPacIdx = 310;
     gameOver = false;
     placeGameElements();
     startGhostMovement();
+    startGameButton.innerHTML = 'Start Game'
 }
 
-const removeKeyListener = (evt) => {
-        document.removeEventListener('keydown', movePacman)
-};
+
+document.addEventListener('keydown', movePacman);
+
+
 
 
 
@@ -549,3 +561,6 @@ const removeKeyListener = (evt) => {
 // Ghosts: ghostOne - i = 150, ghostTwo - i = 189, ghostThree - i = 190; ghostFour - i = 191;
 // Special pellet is placed at i = 41, 58, 221, 238 
 
+
+// at start game have start button only, and at end game, have reset button only and 
+// when strat button is clicked, it gets replaced with reset button 
