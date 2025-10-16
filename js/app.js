@@ -281,9 +281,6 @@ const stopAllGhosts = () => {
 // value 2 = path - valid neighbour, can move there 
 // each valid neighbour vertex is connected to the current vertex by an edge (road)
 
-
-
-
 // x - the column number 
 // y - the row number 
 // % - modulo operator always returns a whole number 
@@ -427,7 +424,7 @@ const ghostFourMove = () => {
 // ghost collision function with Pacman 
 const ghostCollision = () => {
     if (scaredGhost === true) {
-        if (boardCell[currentPacIdx].classList.contains('scaredGhost')){
+        if (boardCell[currentPacIdx].classList.contains('scaredGhost')) {
             boardCell[currentPacIdx].classList.remove('scaredGhost');
             boardCell[currentPacIdx].classList.add('pacman');
         } else {

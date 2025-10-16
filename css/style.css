@@ -69,7 +69,7 @@ header {
 }
 
 .pacman {
-    background-image: url(./pacjo-l.GIF);
+    background-image: url(./assets/images/pacjo-l.GIF);
     background-size: cover;
     height: 25px;
     width: 25px;
@@ -78,7 +78,7 @@ header {
 }
 
 .pacman-right {
-    background-image: url(./pacjo-r.GIF);
+    background-image: url(./assets/images/pacjo-r.GIF);
     background-size: cover;
     height: 25px;
     width: 25px;
@@ -87,7 +87,7 @@ header {
 }
 
 .specialPellet {
-    background-image: url(./pibu.GIF);
+    background-image: url(./assets/images/pibu.GIF);
     background-size: cover;
     height: 25px;
     width: 25px;
@@ -95,7 +95,7 @@ header {
 }
 
 .pellet {
-    background-image: url(./pellets.png);
+    background-image: url(./assets/images/pellets.png);
     background-size: cover;
     height: 25px;
     width: 25px;
@@ -103,7 +103,7 @@ header {
 }
 
 .ghostOne {
-    background-image: url(./roomba-red-up.PNG);
+    background-image: url(./assets/images/roomba-red-up.PNG);
     background-size: cover;
     height: 25px;
     width: 25px;
@@ -111,7 +111,7 @@ header {
 }
 
 .ghostTwo {
-    background-image: url(./roomba-cyan-up.PNG);
+    background-image: url(./assets/images/roomba-cyan-up.PNG);
     background-size: cover;
     height: 25px;
     width: 25px;
@@ -119,7 +119,7 @@ header {
 }
 
 .ghostThree {
-    background-image: url(./roomba-pink-up.PNG);
+    background-image: url(./assets/images/roomba-pink-up.PNG);
     background-size: cover;
     height: 25px;
     width: 25px;
@@ -127,7 +127,7 @@ header {
 }
 
 .ghostFour {
-    background-image: url(./roomba-clyde-up.PNG);
+    background-image: url(./assets/images/roomba-clyde-up.PNG);
     background-size: cover;
     height: 25px;
     width: 25px;
@@ -135,7 +135,7 @@ header {
 }
 
 .scaredGhost {
-    background-image: url(./roomba-scared-up.PNG);
+    background-image: url(./assets/images/roomba-scared-up.PNG);
     background-size: cover;
     height: 25px;
     width: 25px;
