@@ -190,6 +190,9 @@ const pelletCollision = () => {
         ghostIsScared();
         currentPoints = currentPoints + 200; // adding 200 points to current points
         scoreBoard.textContent = `Your Score: ${currentPoints}`;  // displaying current points 
+        const toySound = new Audio('./css/assets/audio/toysound.wav');
+        toySound.play();
+        toySound.volume = .05;
     } else {
         boardCell[previousPacIdx].classList.remove('pacman'); // remove Pacman image from previous index which is the saved value in here - previousPacIdx = currentPacIdx; 
         boardCell[currentPacIdx].classList.add('pacman'); // adding pacman image ; 
