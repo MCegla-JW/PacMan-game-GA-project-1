@@ -521,7 +521,3 @@ const resetGame = () => {
     startGhostMovement();
     startGameButton.innerHTML = 'Start Game';
 };
-
-// Pacman is placed at i = 310 at the start of game 
-// Ghosts: ghostOne - i = 150, ghostTwo - i = 189, ghostThree - i = 190; ghostFour - i = 191;
-// Special pellet is placed at i = 41, 58, 221, 238 
