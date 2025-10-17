@@ -279,7 +279,7 @@ const stopAllGhosts = () => {
 const width = 20; // lenght of the board (20 tiles wide)
 const findGhostNextStep = (currentGhostIdx) => { // look for all possible paths from current position, since its a grid, theres only four directions
     const neighbourTiles = [];
-    const x = currentGhostOneIdx % width;
+    const x = currentGhostIdx % width;
     const y = Math.floor(currentGhostIdx / width); // the column and which tile in the column, that why we need the integer remainder 
 
     if (x > 0) neighbourTiles.push(currentGhostIdx - 1); // left
