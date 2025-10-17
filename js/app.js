@@ -1,17 +1,3 @@
-
-/*-------------------------------- Constants --------------------------------*/
-/*
-Game Board elements: 
-1 - wall 
-2 - pellet 
-3 - Pacman
-4 - specialPellet 
-5 - ghostOne - red 
-6 - ghostTwo - blue 
-7 - ghostThree - pink
-8 - ghostFour - orange
- */
-
 /*--------------------------------- GAME BOARD -------------------------------------*/
 
 let gameBoard = [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
@@ -291,22 +277,22 @@ const stopAllGhosts = () => {
 
 // find ghost next step 
 const width = 20; // lenght of the board (20 tiles wide)
-const findGhostNextStep = (currentGhostOneIdx) => { // look for all possible paths from current position, since its a grid, theres only four directions
+const findGhostNextStep = (currentGhostIdx) => { // look for all possible paths from current position, since its a grid, theres only four directions
     const neighbourTiles = [];
     const x = currentGhostOneIdx % width;
-    const y = Math.floor(currentGhostOneIdx / width); // the column and which tile in the column, that why we need the integer remainder 
+    const y = Math.floor(currentGhostIdx / width); // the column and which tile in the column, that why we need the integer remainder 
 
-    if (x > 0) neighbourTiles.push(currentGhostOneIdx - 1); // left
-    if (x < 19) neighbourTiles.push(currentGhostOneIdx + 1); // right
-    if (y > 0) neighbourTiles.push(currentGhostOneIdx - width) // up
-    if (y < 19) neighbourTiles.push(currentGhostOneIdx + width); // down
+    if (x > 0) neighbourTiles.push(currentGhostIdx - 1); // left
+    if (x < 19) neighbourTiles.push(currentGhostIdx + 1); // right
+    if (y > 0) neighbourTiles.push(currentGhostIdx - width) // up
+    if (y < 19) neighbourTiles.push(currentGhostIdx + width); // down
 
     return neighbourTiles;
 };
 
 // Filter neighbouring paths that are walkable (not walls)
-const getPaths = (gameBoard, currentGhostOneIdx) => { // find all possible walkable paths out of the array of all neigbouring paths that we got from findGhostNextStep function, filter wheter a fall or not and return only walkable paths array
-    return findGhostNextStep(currentGhostOneIdx).filter(nextGhostIdx => gameBoard[nextGhostIdx] != 1);
+const getPaths = (gameBoard, currentGhostIdx) => { // find all possible walkable paths out of the array of all neigbouring paths that we got from findGhostNextStep function, filter wheter a fall or not and return only walkable paths array
+    return findGhostNextStep(currentGhostIdx).filter(nextGhostIdx => gameBoard[nextGhostIdx] != 1);
 };
 
 // ghosts pathfinding 
@@ -466,6 +452,7 @@ startGameButton.addEventListener('click', () => {
     }
 });
 
+// add event listener to listen for key press and apply to movePacman function
 document.addEventListener('keydown', movePacman);
 
 //function to reset game state
