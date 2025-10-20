@@ -35,9 +35,9 @@ This was a solo project and I was given a week to complete it. Here is breakdown
 
 # Technologies Used
 
-HTML5 
-CSS 
-JavaScript (ES6)
+- HTML5 
+- CSS 
+- JavaScript (ES6)
 
 # Brief
 
