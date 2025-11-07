@@ -16,9 +16,7 @@ Welcome page with game instructions
 
 The Game: [PacDog](https://mcegla-jw.github.io/PacMan-game-GA-project-1/)
 
-# Timeframe & Working Team (Solo/Pair/Group)
-
-Instructions
+# Timeframe & Working Team
 
 This was a solo project and I was given a week to complete it. Here is breakdown of my week. 
 
