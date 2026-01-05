@@ -9,8 +9,8 @@ I am currently two weeks into my Software Engineering Bootcamp and this is my fi
 
 Welcome page with game instructions 
 
-![Welcome page with game instructions](./screenshots/Welcome-Screen%20.png)
-![Main Game page](./screenshots/Main-Game-Screen.png)
+![Welcome page with game instructions](./readMe/screenshots/Welcome-Screen%20.png)
+![Main Game page](./readMe/screenshots/Main-Game-Screen.png)
 
 # Deployment link
 
